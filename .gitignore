@@ -1,0 +1,81 @@
+# OS関連ファイル
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# 一時ファイル・その他
+*.class
+*.log
+*.pyc
+*.swp
+*.swo
+*.tmp
+*.temp
+.atom/
+.build/
+.buildlog/
+.history/
+.svn/
+.swiftpm/
+migrate_working_dir/
+
+# ローカル環境・秘密情報
+.env
+.env.*
+!.env.example
+*.local
+
+# IDE設定
+*.iml
+*.ipr
+*.iws
+.idea/
+.vscode/*.code-snippets
+.vscode/settings.json
+.vscode/launch.json
+.vscode/tasks.json
+
+# Flutter / Dart / Pubの生成ファイル
+**/doc/api/
+**/ios/Flutter/.last_build_id
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+.packages
+.pub-cache/
+.pub/
+/build/
+/coverage/
+**/generated_plugin_registrant.dart
+
+# シンボル化・難読化の出力ファイル
+app.*.symbols
+app.*.map.json
+*.symbols
+*.symbols.zip
+
+# Android / Gradleのローカル・生成ファイル
+/android/app/debug
+/android/app/profile
+/android/app/release
+**/.gradle/
+android/local.properties
+*.jks
+*.keystore
+
+# iOS / CocoaPodsのローカル・生成ファイル
+**/Pods/
+**/.symlinks/
+**/DerivedData/
+**/xcuserdata/
+**/*.xcuserstate
+
+# ビルド成果物
+*.ipa
+*.apk
+*.aab
+*.lcov

@@ -1,0 +1,7 @@
+// データの保存先
+web: ブラウザ内のIndexDB
+ios/android: 端末内DB SQLite
+
+// TODO
+データのエクスポート、インポート機能
+クラウド同期機能
