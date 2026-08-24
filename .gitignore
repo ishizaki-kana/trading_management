@@ -38,11 +38,13 @@ migrate_working_dir/
 .vscode/settings.json
 .vscode/launch.json
 .vscode/tasks.json
+!.vscode/tasks.json
 
 # Flutter / Dart / Pubの生成ファイル
 **/doc/api/
 **/ios/Flutter/.last_build_id
 .dart_tool/
+.widget_preview/
 .flutter-plugins
 .flutter-plugins-dependencies
 .packages

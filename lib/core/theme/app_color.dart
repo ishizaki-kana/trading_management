@@ -16,14 +16,26 @@ class AppColor {
   static const Color surface = Color(0xFFfffffe);
   static const Color surfaceContainer = Color(0xFFf5f5f5);
 
+  // light theme semantic colors
+  static const Color lightBackground = Color(0xFFf5f5f5);
+  static const Color lightSurface = Color(0xFFfffffe);
+  static const Color lightSurfaceContainer = Color(0xFFf5f5f5);
+  static const Color lightOnSurface = Color(0xFF333333);
+  static const Color lightOnSurfaceVariant = Color(0xFF757575);
+
+  // dark theme semantic colors
+  static const Color darkBackground = Color(0xFF121212);
+  static const Color darkSurface = Color(0xFF1E1E1E);
+  static const Color darkSurfaceContainer = Color(0xFF2A2A2A);
+  static const Color darkOnSurface = Color(0xFFE6E0E9);
+  static const Color darkOnSurfaceVariant = Color(0xFFCAC4D0);
+
   // text
   static const Color onPrimary = Color(0xff272343);
-  static const Color onSurface = Color(0xFF333333);
-  static const Color onSurfaceVariant = Color(0xFF757575);
-  static const Color onDark = Colors.white;
 
   // outline
   static const Color outline = Color(0xFFE0E0E0);
+  static const Color darkOutline = Color(0xFF555555);
 
   // shadow
   static const Color shadow = Color(0x1A000000);
