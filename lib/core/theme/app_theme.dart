@@ -6,9 +6,11 @@ abstract final class AppTheme {
   static final ThemeData light = _create(
     colorScheme: ColorScheme.fromSeed(
       seedColor: AppColor.primary,
+      secondary: AppColor.secondary,
       brightness: Brightness.light,
       surface: AppColor.lightSurface,
       surfaceContainer: AppColor.lightSurfaceContainer,
+      surfaceContainerLow: AppColor.lightGrey,
       outline: AppColor.outline,
       shadow: AppColor.shadow,
       onPrimary: AppColor.onPrimary,
@@ -21,6 +23,7 @@ abstract final class AppTheme {
   static final ThemeData dark = _create(
     colorScheme: ColorScheme.fromSeed(
       seedColor: AppColor.primary,
+      secondary: AppColor.secondary,
       brightness: Brightness.dark,
       surface: AppColor.darkSurface,
       surfaceContainer: AppColor.darkSurfaceContainer,
