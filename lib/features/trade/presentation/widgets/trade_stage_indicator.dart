@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:trading_management/core/theme/app_color.dart';
 import 'package:trading_management/core/theme/app_icon_size.dart';
 import 'package:trading_management/core/theme/app_spacing.dart';
-import 'package:trading_management/features/trade/domain/entities/trade_stage.dart';
+import 'package:trading_management/features/trade/domain/models/trade_stage.dart';
 
 /// 取引ステージインジケータ
 ///

@@ -1,6 +1,6 @@
-import 'package:trading_management/features/trade/domain/entities/delivery_type.dart';
-import 'package:trading_management/features/trade/domain/entities/trade_stage.dart';
-import 'package:trading_management/features/trade/domain/entities/trade_type.dart';
+import 'package:trading_management/features/trade/domain/models/delivery_type.dart';
+import 'package:trading_management/features/trade/domain/models/trade_stage.dart';
+import 'package:trading_management/features/trade/domain/models/trade_type.dart';
 
 /// 取引ステージ判定クラス
 class TradeStageResolver {

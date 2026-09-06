@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:trading_management/core/theme/app_spacing.dart';
-import 'package:trading_management/features/trade/presentation/models/trade_summary.dart';
+import 'package:trading_management/features/trade/presentation/view_models/trade_summary.dart';
 import 'package:trading_management/features/trade/presentation/widgets/trade_card.dart';
 
 class TradeList extends StatelessWidget {

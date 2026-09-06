@@ -6,11 +6,11 @@ import 'package:trading_management/core/widgets/display/image/app_image/app_netw
 import 'package:trading_management/core/widgets/form/button/app_button.dart';
 import 'package:trading_management/core/widgets/form/chip/app_chip.dart';
 import 'package:trading_management/core/widgets/layout/section_card/section_card.dart';
-import 'package:trading_management/features/trade/domain/entities/delivery_type.dart';
-import 'package:trading_management/features/trade/domain/entities/trade_stage.dart';
-import 'package:trading_management/features/trade/domain/entities/trade_type.dart';
+import 'package:trading_management/features/trade/domain/models/delivery_type.dart';
+import 'package:trading_management/features/trade/domain/models/trade_stage.dart';
+import 'package:trading_management/features/trade/domain/models/trade_type.dart';
 import 'package:trading_management/features/trade/domain/resolvers/trade_stage_resolver.dart';
-import 'package:trading_management/features/trade/presentation/models/trade_summary.dart';
+import 'package:trading_management/features/trade/presentation/view_models/trade_summary.dart';
 import 'package:trading_management/features/trade/presentation/widgets/trade_stage_indicator.dart';
 
 /// 取引カード

@@ -5,3 +5,15 @@ ios/android: 端末内DB SQLite
 // TODO
 データのエクスポート、インポート機能
 クラウド同期機能
+
+
+TradeIndexedDbRepository の生成をプラットフォーム別にする
+Web用Repositoryは idbFactoryBrowser に依存しています。iOS / Android で Drift実装を追加する段階で、conditional import を使うFactoryを用意します。
+
+検索条件は Map<String, Object> より専用クラスへ
+検索を実装する段階では、次のような型付きクラスの方が安全です。
+class TradeSearchConditions {
+  final TradeType? tradeType;
+  final DeliveryType? deliveryType;
+  final bool? isCompleted;
+}

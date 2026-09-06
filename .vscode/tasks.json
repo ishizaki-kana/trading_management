@@ -19,6 +19,34 @@
         "panel": "dedicated",
         "close": false
       }
+    },
+    {
+      "label": "Flutter: Build Web for Persistent Storage",
+      "type": "shell",
+      "command": "flutter build web --debug",
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always",
+        "panel": "dedicated"
+      }
+    },
+    {
+      "label": "Flutter: Serve Web for Persistent Storage",
+      "type": "shell",
+      "command": "python3 -m http.server 8080 --directory build/web",
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "isBackground": true,
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always",
+        "panel": "dedicated",
+        "close": false
+      }
     }
   ]
 }
