@@ -14,7 +14,8 @@ class PartnerService {
   //
   // constructor
   //
-  const PartnerService(this._repository);
+  PartnerService(AppDatabase database)
+    : _repository = PartnerRepository(database);
 
   //
   // public method

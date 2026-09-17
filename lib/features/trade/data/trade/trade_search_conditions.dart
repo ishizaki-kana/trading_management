@@ -8,6 +8,9 @@ class TradeSearchConditions extends BaseSearchConditions {
   // fields
   //
 
+  /// キーワード
+  final String? keywords;
+
   /// 取引種別
   final TradeType? tradeType;
 
@@ -17,6 +20,9 @@ class TradeSearchConditions extends BaseSearchConditions {
   //
   // constructor
   //
-
-  const TradeSearchConditions({this.tradeType, this.deliveryType});
+  const TradeSearchConditions({
+    this.keywords,
+    this.tradeType,
+    this.deliveryType,
+  });
 }

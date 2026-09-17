@@ -1,3 +1,4 @@
+import 'package:trading_management/core/data/database/app_database.dart';
 import 'package:trading_management/features/trade/data/trade_stage_history/trade_stage_history_repository.dart';
 import 'package:trading_management/features/trade/data/trade_stage_history/trade_stage_history_search_conditions.dart';
 
@@ -11,7 +12,8 @@ class TradeStageHistoryService {
   //
   // constructor
   //
-  const TradeStageHistoryService(this._repository);
+  TradeStageHistoryService(AppDatabase database)
+    : _repository = TradeStageHistoryRepository(database);
 
   //
   // public method

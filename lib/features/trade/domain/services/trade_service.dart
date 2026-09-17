@@ -1,3 +1,4 @@
+import 'package:trading_management/core/data/database/app_database.dart';
 import 'package:trading_management/features/partner/domain/services/partner_service.dart';
 import 'package:trading_management/features/trade/data/trade/trade_repository.dart';
 import 'package:trading_management/features/trade/data/trade/trade_search_conditions.dart';
@@ -9,24 +10,30 @@ import 'package:trading_management/features/trade/presentation/view_models/trade
 ///
 /// 取引データの取得・登録・更新・削除を行います。
 class TradeService {
+  //
+  // fields
+  //
+
+  /// 取引リポジトリ
   final TradeRepository _repository;
 
-  final PartnerService partnerService;
-  final TradeStageHistoryService stageHistoryService;
+  /// 取引相手サービス
+  final PartnerService _partnerService;
 
-  const TradeService(
-    this._repository,
-    this.partnerService,
-    this.stageHistoryService,
-  );
+  /// 取引ステージ履歴サービス
+  final TradeStageHistoryService _stageHistoryService;
+
+  TradeService(AppDatabase database)
+    : _repository = TradeRepository(database),
+      _partnerService = PartnerService(database),
+      _stageHistoryService = TradeStageHistoryService(database);
 
   /// 取引リスト取得
-  Future<List<TradeSummary>> getTrades() async {
-    final conditions = TradeSearchConditions();
+  Future<List<TradeSummary>> getTrades(TradeSearchConditions conditions) async {
     final trades = await _repository.getByConditions(conditions);
-    final partners = await partnerService.getPartnersById();
+    final partners = await _partnerService.getPartnersById();
 
-    final stages = await stageHistoryService.getHistories();
+    final stages = await _stageHistoryService.getHistories();
     //  final stageHistoryIds
 
     return trades.map((trade) {
