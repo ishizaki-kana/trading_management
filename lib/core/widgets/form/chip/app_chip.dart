@@ -6,18 +6,38 @@ import 'package:trading_management/core/theme/app_spacing.dart';
 
 /// チップ
 ///
-/// - [label] 表示するテキスト
-/// - [color] チップの色
+/// - [label] ラベル
+/// - [labelStyle] ラベルスタイル
+/// - [color] 色
 /// - [rounded] 丸み
-/// - [isSelected] チップが選択されているかどうか
-/// - [onTap] チップがタップされたときのコールバック
+/// - [isSelected] 選択されているかどうか
+/// - [onTap] タップ時のコールバック
 class AppChip extends StatelessWidget {
+  //
+  // fields
+  //
+
+  /// ラベル
   final String label;
-  final Color color;
-  final bool rounded;
-  final bool isSelected;
+
+  /// ラベルスタイル
   final TextStyle? labelStyle;
+
+  /// 色
+  final Color color;
+
+  /// 丸み
+  final bool rounded;
+
+  /// 選択されているかどうか
+  final bool isSelected;
+
+  /// タップ時のコールバック
   final VoidCallback? onTap;
+
+  //
+  // constructor
+  //
 
   const AppChip({
     super.key,
@@ -28,6 +48,10 @@ class AppChip extends StatelessWidget {
     this.labelStyle,
     this.onTap,
   });
+
+  //
+  // public methods
+  //
 
   @override
   Widget build(BuildContext context) {

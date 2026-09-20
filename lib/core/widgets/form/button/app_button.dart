@@ -4,17 +4,34 @@ import 'package:trading_management/core/theme/app_spacing.dart';
 
 /// ボタン
 ///
-/// - [text] 表示するテキスト
+/// - [text] テキスト
 /// - [padding] ボタンの余白
 /// - [isLoading] ローディング
 /// - [isFullWidth] 横幅拡張
-/// - [onPressed] ボタンがタップされたときのコールバック
+/// - [onPressed] ボタンタップ時のコールバック
 class AppButton extends StatelessWidget {
+  //
+  // fields
+  //
+
+  /// テキスト
   final String text;
+
+  /// パディング
   final EdgeInsetsGeometry? padding;
+
+  /// ローディング中か
   final bool isLoading;
+
+  /// 横幅拡張
   final bool isFullWidth;
+
+  /// ボタンタップ時のコールバック
   final VoidCallback? onPressed;
+
+  //
+  // constructor
+  //
 
   const AppButton({
     super.key,
@@ -24,6 +41,10 @@ class AppButton extends StatelessWidget {
     this.isFullWidth = false,
     this.onPressed,
   });
+
+  //
+  // public methods
+  //
 
   @override
   Widget build(BuildContext context) {
@@ -37,7 +58,7 @@ class AppButton extends StatelessWidget {
     return SizedBox(
       width: isFullWidth ? double.infinity : null,
       child: ElevatedButton(
-        onPressed: onPressed,
+        onPressed: isLoading ? null : onPressed,
         style: ElevatedButton.styleFrom(padding: padding),
         child: isLoading
             ? const SizedBox(

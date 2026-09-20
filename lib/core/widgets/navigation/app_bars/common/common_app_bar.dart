@@ -4,29 +4,54 @@ import 'package:trading_management/core/widgets/display/typography/heading/headi
 
 /// 汎用アプリバー
 ///
-/// - [leading] アイコン
 /// - [title] タイトル
+/// - [leading] アイコン
 /// - [actions] アクションボタンリスト
-/// - [centerTitle] タイトルを中央に表示するかどうか（デフォルト：false）
-/// - [showCloseButton] 閉じるボタン表示（デフォルト：false）
+/// - [isCenterTitle] タイトルを中央に表示するかどうか（デフォルト：false）
+/// - [showCloseButton] 閉じるボタン表示するかどうか（デフォルト：false）
 class CommonAppBar extends StatelessWidget implements PreferredSizeWidget {
-  final Widget? leading;
+  //
+  // fields
+  //
+
+  /// タイトル
   final String? title;
+
+  /// アイコン
+  final Widget? leading;
+
+  /// アクションボタンリスト
   final List<Widget> actions;
-  final bool centerTitle;
+
+  /// タイトルを中央に表示するかどうか
+  final bool isCenterTitle;
+
+  /// 閉じるボタンを表示するかどうか
   final bool showCloseButton;
+
+  //
+  // constructor
+  //
 
   const CommonAppBar({
     super.key,
     this.leading,
     this.title,
     this.actions = const [],
-    this.centerTitle = false,
+    this.isCenterTitle = false,
     this.showCloseButton = false,
   });
 
+  //
+  // getter
+  //
+
   @override
   Size get preferredSize => const Size.fromHeight(kToolbarHeight);
+
+  //
+  // public methods
+  //
 
   @override
   Widget build(BuildContext context) {
@@ -36,13 +61,20 @@ class CommonAppBar extends StatelessWidget implements PreferredSizeWidget {
       leading: _buildLeading(context),
       title: title == null ? null : Heading(text: title!),
       titleSpacing: AppSpacing.s8,
-      centerTitle: centerTitle,
+      centerTitle: isCenterTitle,
       actions: actions,
       actionsPadding: const EdgeInsets.only(right: AppSpacing.s8),
       backgroundColor: theme.colorScheme.surface,
       elevation: 0,
+      scrolledUnderElevation: 0,
+      surfaceTintColor: Colors.transparent,
+      automaticallyImplyLeading: false,
     );
   }
+
+  //
+  // private methods
+  //
 
   /// アイコン生成
   ///
@@ -52,12 +84,7 @@ class CommonAppBar extends StatelessWidget implements PreferredSizeWidget {
   Widget? _buildLeading(BuildContext context) {
     // 閉じるボタン
     if (showCloseButton) {
-      return IconButton(
-        icon: const Icon(Icons.close),
-        onPressed: Navigator.canPop(context)
-            ? () => Navigator.pop(context)
-            : null,
-      );
+      return const CloseButton();
     }
 
     // アイコン

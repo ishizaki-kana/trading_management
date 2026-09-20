@@ -5,23 +5,42 @@ import 'package:trading_management/core/widgets/display/typography/section_title
 
 /// セクションカード
 ///
-/// - [child] 子要素
 /// - [title] タイトル
-/// - [titleLeading] タイトルの左側に表示するウィジェット
+/// - [leading] アイコン
 /// - [color] 背景色
+/// - [child] 子要素
 class SectionCard extends StatelessWidget {
-  final Widget child;
+  //
+  // fields
+  //
+
+  /// タイトル
   final String? title;
-  final Widget? titleLeading;
+
+  /// アイコン
+  final Widget? leading;
+
+  /// 背景色
   final Color? color;
+
+  /// 子要素
+  final Widget child;
+
+  //
+  // constructor
+  //
 
   const SectionCard({
     super.key,
     required this.child,
     this.title,
-    this.titleLeading,
+    this.leading,
     this.color,
   });
+
+  //
+  // public methods
+  //
 
   @override
   Widget build(BuildContext context) {
@@ -43,15 +62,14 @@ class SectionCard extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         spacing: AppSpacing.s8,
         children: [
-          if (title != null || titleLeading != null)
+          if (title != null || leading != null)
             Row(
               spacing: AppSpacing.s12,
               children: [
-                ?titleLeading,
-                if (title != null) SectionTitle(text: title!),
+                ?leading,
+                if (title != null) Expanded(child: SectionTitle(text: title!)),
               ],
             ),
-
           child,
         ],
       ),

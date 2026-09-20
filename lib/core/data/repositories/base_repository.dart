@@ -19,10 +19,11 @@ abstract class BaseRepository<
   //
   // constructor
   //
+
   const BaseRepository(this.database);
 
   //
-  // public method
+  // public methods
   //
 
   /// エンティティ取得

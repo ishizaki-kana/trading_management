@@ -2,11 +2,24 @@ import 'package:flutter/material.dart';
 
 /// セクションタイトル
 ///
-/// - [text] 表示するテキスト
+/// - [text] テキスト
 class SectionTitle extends StatelessWidget {
+  //
+  // fields
+  //
+
+  /// テキスト
   final String text;
 
+  //
+  // constructor
+  //
+
   const SectionTitle({super.key, required this.text});
+
+  //
+  // public methods
+  //
 
   @override
   Widget build(BuildContext context) {

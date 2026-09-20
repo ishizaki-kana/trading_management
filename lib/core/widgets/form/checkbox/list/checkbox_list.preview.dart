@@ -1,12 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:trading_management/core/preview/app_preview.dart';
+import 'package:trading_management/core/widgets/form/checkbox/checkbox_option.dart';
 import 'package:trading_management/core/widgets/form/checkbox/list/checkbox_list.dart';
-import 'package:trading_management/core/widgets/form/checkbox/tile/checkbox_tile.dart';
 
-@AppPreview(
-  group: 'form/checkbox/list',
-  size: Size(320, 200),
-)
+@AppPreview(group: 'form/checkbox/list', size: Size(320, 200))
 Widget checkboxListPreview() {
   var options = const [
     CheckboxOption(value: 'one', label: '項目1', checked: true),

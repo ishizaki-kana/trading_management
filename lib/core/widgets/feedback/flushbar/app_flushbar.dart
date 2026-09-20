@@ -1,8 +1,10 @@
 import 'package:another_flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:trading_management/core/theme/app_duration.dart';
+import 'package:trading_management/core/theme/app_feedback_color.dart';
 import 'package:trading_management/core/theme/app_radius.dart';
 import 'package:trading_management/core/theme/app_spacing.dart';
+import 'package:trading_management/core/types/feedback_type.dart';
 
 /// フラッシュバー
 ///
@@ -10,12 +12,49 @@ import 'package:trading_management/core/theme/app_spacing.dart';
 class AppFlushbar {
   AppFlushbar._();
 
-  /// エラーフラッシュバー
+  //
+  // public methods
+  //
+
+  /// フラッシュバー
   ///
-  /// - [context] コンテキスト
+  /// - [context]
+  /// - [type] 状態種別
   /// - [message] メッセージ
-  static Future<void> error(BuildContext context, String message) {
+  static Future<void> show(
+    BuildContext context, {
+    required FeedbackType type,
+    required String message,
+  }) {
     final theme = Theme.of(context);
+    final feedbackColors = theme.extension<AppFeedbackColor>()!;
+
+    final (icon, iconColor, backgroundColor, messageColor) = switch (type) {
+      FeedbackType.success => (
+        Icons.check_circle_outline,
+        feedbackColors.success,
+        feedbackColors.successContainer,
+        feedbackColors.onSuccessContainer,
+      ),
+      FeedbackType.info => (
+        Icons.info_outline,
+        feedbackColors.info,
+        feedbackColors.infoContainer,
+        feedbackColors.onInfoContainer,
+      ),
+      FeedbackType.warning => (
+        Icons.warning_amber_outlined,
+        feedbackColors.warning,
+        feedbackColors.warningContainer,
+        feedbackColors.onWarningContainer,
+      ),
+      FeedbackType.error => (
+        Icons.error_outline,
+        theme.colorScheme.error,
+        theme.colorScheme.errorContainer,
+        theme.colorScheme.onErrorContainer,
+      ),
+    };
 
     return Flushbar(
       message: message,
@@ -27,9 +66,9 @@ class AppFlushbar {
       ),
       borderRadius: AppRadius.md,
       duration: AppDuration.notification,
-      icon: Icon(Icons.error_outline, color: theme.colorScheme.error),
-      backgroundColor: theme.colorScheme.errorContainer,
-      messageColor: theme.colorScheme.onErrorContainer,
+      icon: Icon(icon, color: iconColor),
+      backgroundColor: backgroundColor,
+      messageColor: messageColor,
     ).show(context);
   }
 }

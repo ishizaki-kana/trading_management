@@ -36,7 +36,7 @@ class TradeCard extends StatelessWidget {
 
     return SectionCard(
       title: trade.partnerText,
-      titleLeading: _buildTradeChip(theme),
+      leading: _buildTradeChip(theme),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

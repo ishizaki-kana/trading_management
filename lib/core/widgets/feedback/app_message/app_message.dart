@@ -3,11 +3,31 @@ import 'package:trading_management/core/theme/app_icon_size.dart';
 import 'package:trading_management/core/theme/app_spacing.dart';
 
 /// メッセージ画面
+///
+/// メッセージとアイコンを画面中央に表示します。
+///
+/// - [message] メッセージ
+/// - [icon] アイコン
 class AppMessage extends StatelessWidget {
+  //
+  // fields
+  //
+
+  /// メッセージ
   final String message;
+
+  /// アイコン
   final IconData? icon;
 
+  //
+  // constructor
+  //
+
   const AppMessage({super.key, required this.message, this.icon});
+
+  //
+  // public methods
+  //
 
   @override
   Widget build(BuildContext context) {
@@ -15,6 +35,7 @@ class AppMessage extends StatelessWidget {
 
     return Center(
       child: Column(
+        mainAxisSize: MainAxisSize.min,
         mainAxisAlignment: MainAxisAlignment.center,
         spacing: AppSpacing.s12,
         children: [

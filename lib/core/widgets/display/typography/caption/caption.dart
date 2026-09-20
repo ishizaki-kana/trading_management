@@ -2,11 +2,24 @@ import 'package:flutter/material.dart';
 
 /// キャプション
 ///
-/// - [text] 表示するテキスト
+/// - [text] テキスト
 class Caption extends StatelessWidget {
+  //
+  // fields
+  //
+
+  /// テキスト
   final String text;
 
+  //
+  // constructor
+  //
+
   const Caption({super.key, required this.text});
+
+  //
+  // public methods
+  //
 
   @override
   Widget build(BuildContext context) {

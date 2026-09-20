@@ -1,25 +1,46 @@
 import 'package:flutter/material.dart';
 import 'package:trading_management/core/theme/app_spacing.dart';
+import 'package:trading_management/core/widgets/feedback/app_message/app_message.dart';
+import 'package:trading_management/core/widgets/feedback/loading/loading.dart';
 
 /// アプリページ
 ///
 /// - [appBar] アプリバー
 /// - [child] 子要素
-/// - [isLoading] ローディング中かどうか
 /// - [error] エラーメッセージ
+/// - [isLoading] ローディング中かどうか
 class AppPage extends StatelessWidget {
+  //
+  // fields
+  //
+
+  /// アプリバー
   final PreferredSizeWidget appBar;
+
+  /// 子要素
   final Widget child;
-  final bool isLoading;
+
+  /// エラーメッセージ
   final String? error;
+
+  /// ローディング中かどうか
+  final bool isLoading;
+
+  //
+  // constructor
+  //
 
   const AppPage({
     super.key,
     required this.appBar,
     required this.child,
-    this.isLoading = false,
     this.error,
+    this.isLoading = false,
   });
+
+  //
+  // public methods
+  //
 
   @override
   Widget build(BuildContext context) {
@@ -27,10 +48,10 @@ class AppPage extends StatelessWidget {
 
     if (isLoading) {
       // ロード時
-      body = const Center(child: CircularProgressIndicator());
+      body = const Loading();
     } else if (error != null) {
       // エラー時
-      body = Center(child: Text(error!));
+      body = AppMessage(message: error!);
     } else {
       // 正常時
       body = SingleChildScrollView(

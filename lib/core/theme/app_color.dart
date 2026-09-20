@@ -41,10 +41,12 @@ class AppColor {
   // カードやコンテナの影
   static const Color shadow = Color(0x1A000000);
 
-  // 状態表示・補助色
-  static const Color red = Color(0xffD32F2F);
-  static const Color blue = Color(0xff1E88E5);
-  static const Color green = Color(0xff43A047);
+  // 状態表示
+  static const Color success = Color(0xff43A047);
+  static const Color info = Color(0xff1E88E5);
+  static const Color warning = Color(0xFFffd803);
+  static const Color error = Color(0xffD32F2F);
+
   static const Color grey = Color(0xff757575);
   static const Color lightGrey = Color(0xffEEEEEE);
   static const Color white = Color(0xffffffff);

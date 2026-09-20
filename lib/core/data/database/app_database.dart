@@ -14,6 +14,10 @@ part 'app_database.g.dart';
 /// OPFS または IndexedDB に永続化します。
 @DriftDatabase(tables: [Trades, TradeStageHistories, Partners])
 class AppDatabase extends _$AppDatabase {
+  //
+  // constructor
+  //
+
   AppDatabase()
     : super(
         driftDatabase(
@@ -33,8 +37,16 @@ class AppDatabase extends _$AppDatabase {
         ),
       );
 
+  //
+  // getter
+  //
+
   @override
   int get schemaVersion => 1;
+
+  //
+  // public methods
+  //
 
   @override
   MigrationStrategy get migration => MigrationStrategy(

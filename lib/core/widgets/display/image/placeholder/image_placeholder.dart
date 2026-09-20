@@ -7,14 +7,25 @@ import 'package:trading_management/core/theme/app_icon_size.dart';
 /// - [width] 横幅
 /// - [height] 高さ
 class ImagePlaceholder extends StatelessWidget {
+  //
+  // fields
+  //
+
+  /// 横幅
   final double? width;
+
+  /// 高さ
   final double? height;
 
-  const ImagePlaceholder({
-    super.key,
-    this.width = double.infinity,
-    this.height = double.infinity,
-  });
+  //
+  // constructor
+  //
+
+  const ImagePlaceholder({super.key, this.width, this.height});
+
+  //
+  // public methods
+  //
 
   @override
   Widget build(BuildContext context) {
@@ -23,8 +34,10 @@ class ImagePlaceholder extends StatelessWidget {
       height: height,
       alignment: Alignment.center,
       color: AppColor.lightGrey,
-      child: const Center(
-        child: Icon(Icons.image, size: AppIconSize.xxxl, color: AppColor.grey),
+      child: const Icon(
+        Icons.image,
+        size: AppIconSize.xxxl,
+        color: AppColor.grey,
       ),
     );
   }

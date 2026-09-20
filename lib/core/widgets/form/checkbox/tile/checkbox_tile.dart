@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:trading_management/core/theme/app_spacing.dart';
+import 'package:trading_management/core/widgets/form/checkbox/checkbox_option.dart';
 
 /// チェックボックス
 ///
@@ -8,10 +9,25 @@ import 'package:trading_management/core/theme/app_spacing.dart';
 /// - [option] チェックボックス項目
 /// - [onChanged] 更新後の項目を通知するコールバック
 class CheckboxTile extends StatelessWidget {
+  //
+  // fields
+  //
+
+  /// チェックボックス項目
   final CheckboxOption option;
+
+  /// 更新後の項目を通知するコールバック
   final ValueChanged<CheckboxOption>? onChanged;
 
+  //
+  // constructor
+  //
+
   const CheckboxTile({super.key, required this.option, this.onChanged});
+
+  //
+  // public methods
+  //
 
   @override
   Widget build(BuildContext context) {
@@ -37,40 +53,13 @@ class CheckboxTile extends StatelessWidget {
     );
   }
 
+  //
+  // private methods
+  //
+
   /// チェック状態の切り替え
   void _toggle() {
     if (onChanged == null) return;
     onChanged?.call(option.copyWith(checked: !option.checked));
   }
-}
-
-/// チェックボックスオプション
-///
-/// - [value] 値
-/// - [label] ラベル
-/// - [checked] 選択されているかどうか
-class CheckboxOption {
-  final String value;
-  final String label;
-  final bool checked;
-
-  const CheckboxOption({
-    required this.value,
-    required this.label,
-    required this.checked,
-  });
-
-  /// コピー
-  ///
-  /// 一部の値を変更した新しいオブジェクトを返します。
-  ///
-  /// - [value] 値
-  /// - [label] ラベル
-  /// - [checked] 選択されているかどうか
-  CheckboxOption copyWith({String? value, String? label, bool? checked}) =>
-      CheckboxOption(
-        value: value ?? this.value,
-        label: label ?? this.label,
-        checked: checked ?? this.checked,
-      );
 }
