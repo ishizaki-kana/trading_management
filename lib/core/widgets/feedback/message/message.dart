@@ -8,7 +8,7 @@ import 'package:trading_management/core/theme/app_spacing.dart';
 ///
 /// - [message] メッセージ
 /// - [icon] アイコン
-class AppMessage extends StatelessWidget {
+class Message extends StatelessWidget {
   //
   // fields
   //
@@ -23,7 +23,7 @@ class AppMessage extends StatelessWidget {
   // constructor
   //
 
-  const AppMessage({super.key, required this.message, this.icon});
+  const Message({super.key, required this.message, this.icon});
 
   //
   // public methods

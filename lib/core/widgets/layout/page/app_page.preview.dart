@@ -9,13 +9,10 @@ const _group = 'layout/page';
 Widget appPagePreview() {
   return const AppPage(
     appBar: CommonAppBar(title: 'ページタイトル'),
-    child: Column(
+    body: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       spacing: 16,
-      children: [
-        Text('ページコンテンツ'),
-        Text('スクロール可能なコンテンツを表示します。'),
-      ],
+      children: [Text('ページコンテンツ'), Text('スクロール可能なコンテンツを表示します。')],
     ),
   );
 }
@@ -25,7 +22,7 @@ Widget appPageLoadingPreview() {
   return const AppPage(
     appBar: CommonAppBar(title: 'ページタイトル'),
     isLoading: true,
-    child: SizedBox(),
+    body: SizedBox(),
   );
 }
 
@@ -33,7 +30,7 @@ Widget appPageLoadingPreview() {
 Widget appPageErrorPreview() {
   return const AppPage(
     appBar: CommonAppBar(title: 'ページタイトル'),
-    error: 'データの読み込みに失敗しました。',
-    child: SizedBox(),
+    message: 'データの読み込みに失敗しました。',
+    body: SizedBox(),
   );
 }

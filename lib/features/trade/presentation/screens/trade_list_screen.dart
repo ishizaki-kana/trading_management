@@ -68,9 +68,19 @@ class _TradeListScreenState extends State<TradeListScreen> {
   Widget build(BuildContext context) {
     return AppPage(
       isLoading: _isLoading,
-      error: _message?.toString(),
+      message: _message?.toString(),
       appBar: TradeSearchAppBar(onChanged: _searchTrades),
-      child: _buildTradeList(_trades),
+      body: ListView.separated(
+        padding: EdgeInsets.symmetric(
+          horizontal: AppSpacing.pageHorizontal(context),
+          vertical: AppSpacing.pageVertical(context),
+        ),
+        itemCount: _trades.length,
+        itemBuilder: (context, index) {
+          return TradeCard(trade: _trades[index]);
+        },
+        separatorBuilder: (_, _) => const SizedBox(height: AppSpacing.s20),
+      ),
     );
   }
 
@@ -79,6 +89,8 @@ class _TradeListScreenState extends State<TradeListScreen> {
   //
 
   /// 取引リスト取得
+  ///
+  /// - [conditions] 検索条件
   Future<void> _loadTrades(TradeSearchConditions conditions) async {
     final requestId = ++_currentRequestId;
 
@@ -117,14 +129,9 @@ class _TradeListScreenState extends State<TradeListScreen> {
   }
 
   /// 検索条件更新
+  ///
+  /// - [conditions] 検索条件
   void _searchTrades(TradeSearchConditions conditions) {
     _loadTrades(conditions);
-  }
-
-  Widget _buildTradeList(List<TradeSummary> trades) {
-    return Column(
-      spacing: AppSpacing.s20,
-      children: trades.map((t) => TradeCard(trade: t)).toList(),
-    );
   }
 }

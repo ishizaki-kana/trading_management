@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:trading_management/core/theme/app_spacing.dart';
-import 'package:trading_management/core/widgets/feedback/app_message/app_message.dart';
 import 'package:trading_management/core/widgets/feedback/loading/loading.dart';
+import 'package:trading_management/core/widgets/feedback/message/message.dart';
 
 /// アプリページ
 ///
 /// - [appBar] アプリバー
 /// - [child] 子要素
-/// - [error] エラーメッセージ
+/// - [message] メッセージ
 /// - [isLoading] ローディング中かどうか
 class AppPage extends StatelessWidget {
   //
@@ -17,11 +16,11 @@ class AppPage extends StatelessWidget {
   /// アプリバー
   final PreferredSizeWidget appBar;
 
-  /// 子要素
-  final Widget child;
+  /// ボディ
+  final Widget body;
 
-  /// エラーメッセージ
-  final String? error;
+  /// メッセージ
+  final String? message;
 
   /// ローディング中かどうか
   final bool isLoading;
@@ -33,8 +32,8 @@ class AppPage extends StatelessWidget {
   const AppPage({
     super.key,
     required this.appBar,
-    required this.child,
-    this.error,
+    required this.body,
+    this.message,
     this.isLoading = false,
   });
 
@@ -44,25 +43,12 @@ class AppPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Widget body;
+    final displayBody = switch ((isLoading, message)) {
+      (true, _) => const Loading(),
+      (false, final message?) => Message(message: message),
+      (false, null) => body,
+    };
 
-    if (isLoading) {
-      // ロード時
-      body = const Loading();
-    } else if (error != null) {
-      // エラー時
-      body = AppMessage(message: error!);
-    } else {
-      // 正常時
-      body = SingleChildScrollView(
-        padding: EdgeInsets.symmetric(
-          horizontal: AppSpacing.pageHorizontal(context),
-          vertical: AppSpacing.pageVertical(context),
-        ),
-        child: child,
-      );
-    }
-
-    return Scaffold(appBar: appBar, body: body);
+    return Scaffold(appBar: appBar, body: displayBody);
   }
 }
