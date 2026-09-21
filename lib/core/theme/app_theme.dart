@@ -9,6 +9,7 @@ abstract final class AppTheme {
     colorScheme: ColorScheme.fromSeed(
       seedColor: AppColor.primary,
       secondary: AppColor.secondary,
+      tertiary: AppColor.accent,
       brightness: Brightness.light,
       surface: AppColor.lightSurface, // 基本的な面
       surfaceContainer: AppColor.lightSurfaceContainer, // コンテナ面
@@ -27,6 +28,7 @@ abstract final class AppTheme {
     colorScheme: ColorScheme.fromSeed(
       seedColor: AppColor.primary,
       secondary: AppColor.secondary,
+      tertiary: AppColor.accent,
       brightness: Brightness.dark,
       surface: AppColor.darkSurface, // 基本的な面
       surfaceContainer: AppColor.darkSurfaceContainer, // コンテナ面

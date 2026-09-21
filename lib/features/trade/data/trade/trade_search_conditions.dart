@@ -20,6 +20,7 @@ class TradeSearchConditions extends BaseSearchConditions {
   //
   // constructor
   //
+
   const TradeSearchConditions({
     this.keywords,
     this.tradeType,

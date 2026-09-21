@@ -47,7 +47,13 @@ class AppColor {
   static const Color warning = Color(0xFFffd803);
   static const Color error = Color(0xffD32F2F);
 
-  static const Color grey = Color(0xff757575);
-  static const Color lightGrey = Color(0xffEEEEEE);
+  // 汎用
   static const Color white = Color(0xffffffff);
+  static const Color lightGrey = Color(0xffEEEEEE);
+  static const Color grey = Color(0xff757575);
+  static const Color yellow = Color(0xFFf6d787);
+  static const Color orange = Color(0xFFf69487);
+  static const Color purple = Color(0xFFbfa5f8);
+  static const Color blue = Color(0xFF87a6f6);
+  static const Color green = Color(0xFF9dcbb2);
 }

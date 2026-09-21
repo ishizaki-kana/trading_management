@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:trading_management/core/theme/app_color.dart';
 import 'package:trading_management/core/theme/app_icon_size.dart';
 import 'package:trading_management/core/theme/app_spacing.dart';
 import 'package:trading_management/features/trade/domain/models/trade_stage.dart';
@@ -11,14 +10,29 @@ import 'package:trading_management/features/trade/domain/models/trade_stage.dart
 /// - [stages] 取引ステージリスト
 /// - [completedStages] 取引ステージ完了済みリスト
 class TradeStageIndicator extends StatelessWidget {
+  //
+  // fields
+  //
+
+  /// 取引ステージリスト
   final List<TradeStage> stages;
+
+  /// 完了済み取引ステージリスト
   final List<TradeStage> completedStages;
+
+  //
+  // constructor
+  //
 
   const TradeStageIndicator({
     super.key,
     required this.stages,
     required this.completedStages,
   });
+
+  //
+  // public methods
+  //
 
   @override
   Widget build(BuildContext context) {
@@ -29,11 +43,11 @@ class TradeStageIndicator extends StatelessWidget {
         // 先頭と末尾の丸の中心までの距離
         final lineInset = constraints.maxWidth / (stages.length * 2);
         // 棒の高さ
-        final lineHeight = 11.0;
+        final lineTop = 11.0;
         // 完了後の色
-        final completedColor = AppColor.accent;
+        final completedColor = theme.colorScheme.tertiary;
         // 未完了の色
-        final unfinishedColor = AppColor.lightGrey;
+        final unfinishedColor = theme.colorScheme.surfaceContainerLow;
 
         return SizedBox(
           width: double.infinity,
@@ -43,7 +57,7 @@ class TradeStageIndicator extends StatelessWidget {
               Positioned(
                 left: lineInset, // 最初の丸の中心
                 right: lineInset, // 最後の丸の中心
-                top: lineHeight,
+                top: lineTop,
                 child: Row(
                   children: List.generate(stages.length - 1, (index) {
                     final isCurrentCompleted = completedStages.contains(
@@ -80,7 +94,6 @@ class TradeStageIndicator extends StatelessWidget {
                   }),
                 ),
               ),
-
               // 丸とラベル
               Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -97,10 +110,10 @@ class TradeStageIndicator extends StatelessWidget {
                               ? completedColor
                               : unfinishedColor,
                           child: isCompleted
-                              ? const Icon(
+                              ? Icon(
                                   Icons.check,
                                   size: AppIconSize.sm,
-                                  color: AppColor.white,
+                                  color: theme.colorScheme.onTertiary,
                                 )
                               : Text(
                                   '${index + 1}',
@@ -115,7 +128,9 @@ class TradeStageIndicator extends StatelessWidget {
                           textAlign: TextAlign.center,
                           style: TextStyle(
                             fontSize: 12,
-                            color: isCompleted ? completedColor : AppColor.grey,
+                            color: isCompleted
+                                ? completedColor
+                                : theme.colorScheme.onSurfaceVariant,
                           ),
                         ),
                       ],

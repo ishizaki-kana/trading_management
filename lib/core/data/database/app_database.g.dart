@@ -74,27 +74,39 @@ class $TradesTable extends Trades with TableInfo<$TradesTable, Trade> {
     type: DriftSqlType.string,
     requiredDuringInsert: true,
   );
-  static const VerificationMeta _offerItemImageUrlMeta = const VerificationMeta(
-    'offerItemImageUrl',
+  static const VerificationMeta _offerItemImageIdMeta = const VerificationMeta(
+    'offerItemImageId',
   );
   @override
-  late final GeneratedColumn<String> offerItemImageUrl =
+  late final GeneratedColumn<String> offerItemImageId = GeneratedColumn<String>(
+    'offer_item_image_id',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _wantedItemImageIdMeta = const VerificationMeta(
+    'wantedItemImageId',
+  );
+  @override
+  late final GeneratedColumn<String> wantedItemImageId =
       GeneratedColumn<String>(
-        'offer_item_image_url',
+        'wanted_item_image_id',
         aliasedName,
         true,
         type: DriftSqlType.string,
         requiredDuringInsert: false,
       );
-  static const VerificationMeta _wantedItemImageUrlMeta =
-      const VerificationMeta('wantedItemImageUrl');
+  static const VerificationMeta _exchangeDateTimeMeta = const VerificationMeta(
+    'exchangeDateTime',
+  );
   @override
-  late final GeneratedColumn<String> wantedItemImageUrl =
-      GeneratedColumn<String>(
-        'wanted_item_image_url',
+  late final GeneratedColumn<DateTime> exchangeDateTime =
+      GeneratedColumn<DateTime>(
+        'exchange_date_time',
         aliasedName,
         true,
-        type: DriftSqlType.string,
+        type: DriftSqlType.dateTime,
         requiredDuringInsert: false,
       );
   static const VerificationMeta _isPrepaidMeta = const VerificationMeta(
@@ -128,8 +140,9 @@ class $TradesTable extends Trades with TableInfo<$TradesTable, Trade> {
     partnerId,
     offerItem,
     wantedItem,
-    offerItemImageUrl,
-    wantedItemImageUrl,
+    offerItemImageId,
+    wantedItemImageId,
+    exchangeDateTime,
     isPrepaid,
     memo,
   ];
@@ -199,21 +212,30 @@ class $TradesTable extends Trades with TableInfo<$TradesTable, Trade> {
     } else if (isInserting) {
       context.missing(_wantedItemMeta);
     }
-    if (data.containsKey('offer_item_image_url')) {
+    if (data.containsKey('offer_item_image_id')) {
       context.handle(
-        _offerItemImageUrlMeta,
-        offerItemImageUrl.isAcceptableOrUnknown(
-          data['offer_item_image_url']!,
-          _offerItemImageUrlMeta,
+        _offerItemImageIdMeta,
+        offerItemImageId.isAcceptableOrUnknown(
+          data['offer_item_image_id']!,
+          _offerItemImageIdMeta,
         ),
       );
     }
-    if (data.containsKey('wanted_item_image_url')) {
+    if (data.containsKey('wanted_item_image_id')) {
       context.handle(
-        _wantedItemImageUrlMeta,
-        wantedItemImageUrl.isAcceptableOrUnknown(
-          data['wanted_item_image_url']!,
-          _wantedItemImageUrlMeta,
+        _wantedItemImageIdMeta,
+        wantedItemImageId.isAcceptableOrUnknown(
+          data['wanted_item_image_id']!,
+          _wantedItemImageIdMeta,
+        ),
+      );
+    }
+    if (data.containsKey('exchange_date_time')) {
+      context.handle(
+        _exchangeDateTimeMeta,
+        exchangeDateTime.isAcceptableOrUnknown(
+          data['exchange_date_time']!,
+          _exchangeDateTimeMeta,
         ),
       );
     }
@@ -264,13 +286,17 @@ class $TradesTable extends Trades with TableInfo<$TradesTable, Trade> {
         DriftSqlType.string,
         data['${effectivePrefix}wanted_item'],
       )!,
-      offerItemImageUrl: attachedDatabase.typeMapping.read(
+      offerItemImageId: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
-        data['${effectivePrefix}offer_item_image_url'],
+        data['${effectivePrefix}offer_item_image_id'],
       ),
-      wantedItemImageUrl: attachedDatabase.typeMapping.read(
+      wantedItemImageId: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
-        data['${effectivePrefix}wanted_item_image_url'],
+        data['${effectivePrefix}wanted_item_image_id'],
+      ),
+      exchangeDateTime: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}exchange_date_time'],
       ),
       isPrepaid: attachedDatabase.typeMapping.read(
         DriftSqlType.bool,
@@ -309,10 +335,13 @@ class Trade extends DataClass implements Insertable<Trade> {
   final String wantedItem;
 
   /// 譲渡するアイテムの画像URL
-  final String? offerItemImageUrl;
+  final String? offerItemImageId;
 
   /// 受け取りたいアイテムの画像URL
-  final String? wantedItemImageUrl;
+  final String? wantedItemImageId;
+
+  /// 交換日時
+  final DateTime? exchangeDateTime;
 
   /// 先払いかどうか
   final bool isPrepaid;
@@ -326,8 +355,9 @@ class Trade extends DataClass implements Insertable<Trade> {
     required this.partnerId,
     required this.offerItem,
     required this.wantedItem,
-    this.offerItemImageUrl,
-    this.wantedItemImageUrl,
+    this.offerItemImageId,
+    this.wantedItemImageId,
+    this.exchangeDateTime,
     required this.isPrepaid,
     this.memo,
   });
@@ -340,11 +370,14 @@ class Trade extends DataClass implements Insertable<Trade> {
     map['partner_id'] = Variable<String>(partnerId);
     map['offer_item'] = Variable<String>(offerItem);
     map['wanted_item'] = Variable<String>(wantedItem);
-    if (!nullToAbsent || offerItemImageUrl != null) {
-      map['offer_item_image_url'] = Variable<String>(offerItemImageUrl);
+    if (!nullToAbsent || offerItemImageId != null) {
+      map['offer_item_image_id'] = Variable<String>(offerItemImageId);
     }
-    if (!nullToAbsent || wantedItemImageUrl != null) {
-      map['wanted_item_image_url'] = Variable<String>(wantedItemImageUrl);
+    if (!nullToAbsent || wantedItemImageId != null) {
+      map['wanted_item_image_id'] = Variable<String>(wantedItemImageId);
+    }
+    if (!nullToAbsent || exchangeDateTime != null) {
+      map['exchange_date_time'] = Variable<DateTime>(exchangeDateTime);
     }
     map['is_prepaid'] = Variable<bool>(isPrepaid);
     if (!nullToAbsent || memo != null) {
@@ -361,12 +394,15 @@ class Trade extends DataClass implements Insertable<Trade> {
       partnerId: Value(partnerId),
       offerItem: Value(offerItem),
       wantedItem: Value(wantedItem),
-      offerItemImageUrl: offerItemImageUrl == null && nullToAbsent
+      offerItemImageId: offerItemImageId == null && nullToAbsent
           ? const Value.absent()
-          : Value(offerItemImageUrl),
-      wantedItemImageUrl: wantedItemImageUrl == null && nullToAbsent
+          : Value(offerItemImageId),
+      wantedItemImageId: wantedItemImageId == null && nullToAbsent
           ? const Value.absent()
-          : Value(wantedItemImageUrl),
+          : Value(wantedItemImageId),
+      exchangeDateTime: exchangeDateTime == null && nullToAbsent
+          ? const Value.absent()
+          : Value(exchangeDateTime),
       isPrepaid: Value(isPrepaid),
       memo: memo == null && nullToAbsent ? const Value.absent() : Value(memo),
     );
@@ -384,11 +420,12 @@ class Trade extends DataClass implements Insertable<Trade> {
       partnerId: serializer.fromJson<String>(json['partnerId']),
       offerItem: serializer.fromJson<String>(json['offerItem']),
       wantedItem: serializer.fromJson<String>(json['wantedItem']),
-      offerItemImageUrl: serializer.fromJson<String?>(
-        json['offerItemImageUrl'],
+      offerItemImageId: serializer.fromJson<String?>(json['offerItemImageId']),
+      wantedItemImageId: serializer.fromJson<String?>(
+        json['wantedItemImageId'],
       ),
-      wantedItemImageUrl: serializer.fromJson<String?>(
-        json['wantedItemImageUrl'],
+      exchangeDateTime: serializer.fromJson<DateTime?>(
+        json['exchangeDateTime'],
       ),
       isPrepaid: serializer.fromJson<bool>(json['isPrepaid']),
       memo: serializer.fromJson<String?>(json['memo']),
@@ -404,8 +441,9 @@ class Trade extends DataClass implements Insertable<Trade> {
       'partnerId': serializer.toJson<String>(partnerId),
       'offerItem': serializer.toJson<String>(offerItem),
       'wantedItem': serializer.toJson<String>(wantedItem),
-      'offerItemImageUrl': serializer.toJson<String?>(offerItemImageUrl),
-      'wantedItemImageUrl': serializer.toJson<String?>(wantedItemImageUrl),
+      'offerItemImageId': serializer.toJson<String?>(offerItemImageId),
+      'wantedItemImageId': serializer.toJson<String?>(wantedItemImageId),
+      'exchangeDateTime': serializer.toJson<DateTime?>(exchangeDateTime),
       'isPrepaid': serializer.toJson<bool>(isPrepaid),
       'memo': serializer.toJson<String?>(memo),
     };
@@ -418,8 +456,9 @@ class Trade extends DataClass implements Insertable<Trade> {
     String? partnerId,
     String? offerItem,
     String? wantedItem,
-    Value<String?> offerItemImageUrl = const Value.absent(),
-    Value<String?> wantedItemImageUrl = const Value.absent(),
+    Value<String?> offerItemImageId = const Value.absent(),
+    Value<String?> wantedItemImageId = const Value.absent(),
+    Value<DateTime?> exchangeDateTime = const Value.absent(),
     bool? isPrepaid,
     Value<String?> memo = const Value.absent(),
   }) => Trade(
@@ -429,12 +468,15 @@ class Trade extends DataClass implements Insertable<Trade> {
     partnerId: partnerId ?? this.partnerId,
     offerItem: offerItem ?? this.offerItem,
     wantedItem: wantedItem ?? this.wantedItem,
-    offerItemImageUrl: offerItemImageUrl.present
-        ? offerItemImageUrl.value
-        : this.offerItemImageUrl,
-    wantedItemImageUrl: wantedItemImageUrl.present
-        ? wantedItemImageUrl.value
-        : this.wantedItemImageUrl,
+    offerItemImageId: offerItemImageId.present
+        ? offerItemImageId.value
+        : this.offerItemImageId,
+    wantedItemImageId: wantedItemImageId.present
+        ? wantedItemImageId.value
+        : this.wantedItemImageId,
+    exchangeDateTime: exchangeDateTime.present
+        ? exchangeDateTime.value
+        : this.exchangeDateTime,
     isPrepaid: isPrepaid ?? this.isPrepaid,
     memo: memo.present ? memo.value : this.memo,
   );
@@ -452,12 +494,15 @@ class Trade extends DataClass implements Insertable<Trade> {
       wantedItem: data.wantedItem.present
           ? data.wantedItem.value
           : this.wantedItem,
-      offerItemImageUrl: data.offerItemImageUrl.present
-          ? data.offerItemImageUrl.value
-          : this.offerItemImageUrl,
-      wantedItemImageUrl: data.wantedItemImageUrl.present
-          ? data.wantedItemImageUrl.value
-          : this.wantedItemImageUrl,
+      offerItemImageId: data.offerItemImageId.present
+          ? data.offerItemImageId.value
+          : this.offerItemImageId,
+      wantedItemImageId: data.wantedItemImageId.present
+          ? data.wantedItemImageId.value
+          : this.wantedItemImageId,
+      exchangeDateTime: data.exchangeDateTime.present
+          ? data.exchangeDateTime.value
+          : this.exchangeDateTime,
       isPrepaid: data.isPrepaid.present ? data.isPrepaid.value : this.isPrepaid,
       memo: data.memo.present ? data.memo.value : this.memo,
     );
@@ -472,8 +517,9 @@ class Trade extends DataClass implements Insertable<Trade> {
           ..write('partnerId: $partnerId, ')
           ..write('offerItem: $offerItem, ')
           ..write('wantedItem: $wantedItem, ')
-          ..write('offerItemImageUrl: $offerItemImageUrl, ')
-          ..write('wantedItemImageUrl: $wantedItemImageUrl, ')
+          ..write('offerItemImageId: $offerItemImageId, ')
+          ..write('wantedItemImageId: $wantedItemImageId, ')
+          ..write('exchangeDateTime: $exchangeDateTime, ')
           ..write('isPrepaid: $isPrepaid, ')
           ..write('memo: $memo')
           ..write(')'))
@@ -488,8 +534,9 @@ class Trade extends DataClass implements Insertable<Trade> {
     partnerId,
     offerItem,
     wantedItem,
-    offerItemImageUrl,
-    wantedItemImageUrl,
+    offerItemImageId,
+    wantedItemImageId,
+    exchangeDateTime,
     isPrepaid,
     memo,
   );
@@ -503,8 +550,9 @@ class Trade extends DataClass implements Insertable<Trade> {
           other.partnerId == this.partnerId &&
           other.offerItem == this.offerItem &&
           other.wantedItem == this.wantedItem &&
-          other.offerItemImageUrl == this.offerItemImageUrl &&
-          other.wantedItemImageUrl == this.wantedItemImageUrl &&
+          other.offerItemImageId == this.offerItemImageId &&
+          other.wantedItemImageId == this.wantedItemImageId &&
+          other.exchangeDateTime == this.exchangeDateTime &&
           other.isPrepaid == this.isPrepaid &&
           other.memo == this.memo);
 }
@@ -516,8 +564,9 @@ class TradesCompanion extends UpdateCompanion<Trade> {
   final Value<String> partnerId;
   final Value<String> offerItem;
   final Value<String> wantedItem;
-  final Value<String?> offerItemImageUrl;
-  final Value<String?> wantedItemImageUrl;
+  final Value<String?> offerItemImageId;
+  final Value<String?> wantedItemImageId;
+  final Value<DateTime?> exchangeDateTime;
   final Value<bool> isPrepaid;
   final Value<String?> memo;
   final Value<int> rowid;
@@ -528,8 +577,9 @@ class TradesCompanion extends UpdateCompanion<Trade> {
     this.partnerId = const Value.absent(),
     this.offerItem = const Value.absent(),
     this.wantedItem = const Value.absent(),
-    this.offerItemImageUrl = const Value.absent(),
-    this.wantedItemImageUrl = const Value.absent(),
+    this.offerItemImageId = const Value.absent(),
+    this.wantedItemImageId = const Value.absent(),
+    this.exchangeDateTime = const Value.absent(),
     this.isPrepaid = const Value.absent(),
     this.memo = const Value.absent(),
     this.rowid = const Value.absent(),
@@ -541,8 +591,9 @@ class TradesCompanion extends UpdateCompanion<Trade> {
     required String partnerId,
     required String offerItem,
     required String wantedItem,
-    this.offerItemImageUrl = const Value.absent(),
-    this.wantedItemImageUrl = const Value.absent(),
+    this.offerItemImageId = const Value.absent(),
+    this.wantedItemImageId = const Value.absent(),
+    this.exchangeDateTime = const Value.absent(),
     required bool isPrepaid,
     this.memo = const Value.absent(),
     this.rowid = const Value.absent(),
@@ -560,8 +611,9 @@ class TradesCompanion extends UpdateCompanion<Trade> {
     Expression<String>? partnerId,
     Expression<String>? offerItem,
     Expression<String>? wantedItem,
-    Expression<String>? offerItemImageUrl,
-    Expression<String>? wantedItemImageUrl,
+    Expression<String>? offerItemImageId,
+    Expression<String>? wantedItemImageId,
+    Expression<DateTime>? exchangeDateTime,
     Expression<bool>? isPrepaid,
     Expression<String>? memo,
     Expression<int>? rowid,
@@ -573,9 +625,9 @@ class TradesCompanion extends UpdateCompanion<Trade> {
       if (partnerId != null) 'partner_id': partnerId,
       if (offerItem != null) 'offer_item': offerItem,
       if (wantedItem != null) 'wanted_item': wantedItem,
-      if (offerItemImageUrl != null) 'offer_item_image_url': offerItemImageUrl,
-      if (wantedItemImageUrl != null)
-        'wanted_item_image_url': wantedItemImageUrl,
+      if (offerItemImageId != null) 'offer_item_image_id': offerItemImageId,
+      if (wantedItemImageId != null) 'wanted_item_image_id': wantedItemImageId,
+      if (exchangeDateTime != null) 'exchange_date_time': exchangeDateTime,
       if (isPrepaid != null) 'is_prepaid': isPrepaid,
       if (memo != null) 'memo': memo,
       if (rowid != null) 'rowid': rowid,
@@ -589,8 +641,9 @@ class TradesCompanion extends UpdateCompanion<Trade> {
     Value<String>? partnerId,
     Value<String>? offerItem,
     Value<String>? wantedItem,
-    Value<String?>? offerItemImageUrl,
-    Value<String?>? wantedItemImageUrl,
+    Value<String?>? offerItemImageId,
+    Value<String?>? wantedItemImageId,
+    Value<DateTime?>? exchangeDateTime,
     Value<bool>? isPrepaid,
     Value<String?>? memo,
     Value<int>? rowid,
@@ -602,8 +655,9 @@ class TradesCompanion extends UpdateCompanion<Trade> {
       partnerId: partnerId ?? this.partnerId,
       offerItem: offerItem ?? this.offerItem,
       wantedItem: wantedItem ?? this.wantedItem,
-      offerItemImageUrl: offerItemImageUrl ?? this.offerItemImageUrl,
-      wantedItemImageUrl: wantedItemImageUrl ?? this.wantedItemImageUrl,
+      offerItemImageId: offerItemImageId ?? this.offerItemImageId,
+      wantedItemImageId: wantedItemImageId ?? this.wantedItemImageId,
+      exchangeDateTime: exchangeDateTime ?? this.exchangeDateTime,
       isPrepaid: isPrepaid ?? this.isPrepaid,
       memo: memo ?? this.memo,
       rowid: rowid ?? this.rowid,
@@ -631,11 +685,14 @@ class TradesCompanion extends UpdateCompanion<Trade> {
     if (wantedItem.present) {
       map['wanted_item'] = Variable<String>(wantedItem.value);
     }
-    if (offerItemImageUrl.present) {
-      map['offer_item_image_url'] = Variable<String>(offerItemImageUrl.value);
+    if (offerItemImageId.present) {
+      map['offer_item_image_id'] = Variable<String>(offerItemImageId.value);
     }
-    if (wantedItemImageUrl.present) {
-      map['wanted_item_image_url'] = Variable<String>(wantedItemImageUrl.value);
+    if (wantedItemImageId.present) {
+      map['wanted_item_image_id'] = Variable<String>(wantedItemImageId.value);
+    }
+    if (exchangeDateTime.present) {
+      map['exchange_date_time'] = Variable<DateTime>(exchangeDateTime.value);
     }
     if (isPrepaid.present) {
       map['is_prepaid'] = Variable<bool>(isPrepaid.value);
@@ -658,8 +715,9 @@ class TradesCompanion extends UpdateCompanion<Trade> {
           ..write('partnerId: $partnerId, ')
           ..write('offerItem: $offerItem, ')
           ..write('wantedItem: $wantedItem, ')
-          ..write('offerItemImageUrl: $offerItemImageUrl, ')
-          ..write('wantedItemImageUrl: $wantedItemImageUrl, ')
+          ..write('offerItemImageId: $offerItemImageId, ')
+          ..write('wantedItemImageId: $wantedItemImageId, ')
+          ..write('exchangeDateTime: $exchangeDateTime, ')
           ..write('isPrepaid: $isPrepaid, ')
           ..write('memo: $memo, ')
           ..write('rowid: $rowid')
@@ -1214,6 +1272,327 @@ class PartnersCompanion extends UpdateCompanion<Partner> {
   }
 }
 
+class $StoredImagesTable extends StoredImages
+    with TableInfo<$StoredImagesTable, StoredImage> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $StoredImagesTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _imageIdMeta = const VerificationMeta(
+    'imageId',
+  );
+  @override
+  late final GeneratedColumn<String> imageId = GeneratedColumn<String>(
+    'image_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _bytesMeta = const VerificationMeta('bytes');
+  @override
+  late final GeneratedColumn<Uint8List> bytes = GeneratedColumn<Uint8List>(
+    'bytes',
+    aliasedName,
+    false,
+    type: DriftSqlType.blob,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _mimeTypeMeta = const VerificationMeta(
+    'mimeType',
+  );
+  @override
+  late final GeneratedColumn<String> mimeType = GeneratedColumn<String>(
+    'mime_type',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _createdAtMeta = const VerificationMeta(
+    'createdAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
+    'created_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: true,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [imageId, bytes, mimeType, createdAt];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'stored_images';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<StoredImage> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('image_id')) {
+      context.handle(
+        _imageIdMeta,
+        imageId.isAcceptableOrUnknown(data['image_id']!, _imageIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_imageIdMeta);
+    }
+    if (data.containsKey('bytes')) {
+      context.handle(
+        _bytesMeta,
+        bytes.isAcceptableOrUnknown(data['bytes']!, _bytesMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_bytesMeta);
+    }
+    if (data.containsKey('mime_type')) {
+      context.handle(
+        _mimeTypeMeta,
+        mimeType.isAcceptableOrUnknown(data['mime_type']!, _mimeTypeMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_mimeTypeMeta);
+    }
+    if (data.containsKey('created_at')) {
+      context.handle(
+        _createdAtMeta,
+        createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_createdAtMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {imageId};
+  @override
+  StoredImage map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return StoredImage(
+      imageId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}image_id'],
+      )!,
+      bytes: attachedDatabase.typeMapping.read(
+        DriftSqlType.blob,
+        data['${effectivePrefix}bytes'],
+      )!,
+      mimeType: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}mime_type'],
+      )!,
+      createdAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}created_at'],
+      )!,
+    );
+  }
+
+  @override
+  $StoredImagesTable createAlias(String alias) {
+    return $StoredImagesTable(attachedDatabase, alias);
+  }
+}
+
+class StoredImage extends DataClass implements Insertable<StoredImage> {
+  /// 画像ID
+  final String imageId;
+
+  /// 画像データ
+  final Uint8List bytes;
+
+  /// MIMEタイプ
+  final String mimeType;
+
+  /// 作成日時
+  final DateTime createdAt;
+  const StoredImage({
+    required this.imageId,
+    required this.bytes,
+    required this.mimeType,
+    required this.createdAt,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['image_id'] = Variable<String>(imageId);
+    map['bytes'] = Variable<Uint8List>(bytes);
+    map['mime_type'] = Variable<String>(mimeType);
+    map['created_at'] = Variable<DateTime>(createdAt);
+    return map;
+  }
+
+  StoredImagesCompanion toCompanion(bool nullToAbsent) {
+    return StoredImagesCompanion(
+      imageId: Value(imageId),
+      bytes: Value(bytes),
+      mimeType: Value(mimeType),
+      createdAt: Value(createdAt),
+    );
+  }
+
+  factory StoredImage.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return StoredImage(
+      imageId: serializer.fromJson<String>(json['imageId']),
+      bytes: serializer.fromJson<Uint8List>(json['bytes']),
+      mimeType: serializer.fromJson<String>(json['mimeType']),
+      createdAt: serializer.fromJson<DateTime>(json['createdAt']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'imageId': serializer.toJson<String>(imageId),
+      'bytes': serializer.toJson<Uint8List>(bytes),
+      'mimeType': serializer.toJson<String>(mimeType),
+      'createdAt': serializer.toJson<DateTime>(createdAt),
+    };
+  }
+
+  StoredImage copyWith({
+    String? imageId,
+    Uint8List? bytes,
+    String? mimeType,
+    DateTime? createdAt,
+  }) => StoredImage(
+    imageId: imageId ?? this.imageId,
+    bytes: bytes ?? this.bytes,
+    mimeType: mimeType ?? this.mimeType,
+    createdAt: createdAt ?? this.createdAt,
+  );
+  StoredImage copyWithCompanion(StoredImagesCompanion data) {
+    return StoredImage(
+      imageId: data.imageId.present ? data.imageId.value : this.imageId,
+      bytes: data.bytes.present ? data.bytes.value : this.bytes,
+      mimeType: data.mimeType.present ? data.mimeType.value : this.mimeType,
+      createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('StoredImage(')
+          ..write('imageId: $imageId, ')
+          ..write('bytes: $bytes, ')
+          ..write('mimeType: $mimeType, ')
+          ..write('createdAt: $createdAt')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode =>
+      Object.hash(imageId, $driftBlobEquality.hash(bytes), mimeType, createdAt);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is StoredImage &&
+          other.imageId == this.imageId &&
+          $driftBlobEquality.equals(other.bytes, this.bytes) &&
+          other.mimeType == this.mimeType &&
+          other.createdAt == this.createdAt);
+}
+
+class StoredImagesCompanion extends UpdateCompanion<StoredImage> {
+  final Value<String> imageId;
+  final Value<Uint8List> bytes;
+  final Value<String> mimeType;
+  final Value<DateTime> createdAt;
+  final Value<int> rowid;
+  const StoredImagesCompanion({
+    this.imageId = const Value.absent(),
+    this.bytes = const Value.absent(),
+    this.mimeType = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  StoredImagesCompanion.insert({
+    required String imageId,
+    required Uint8List bytes,
+    required String mimeType,
+    required DateTime createdAt,
+    this.rowid = const Value.absent(),
+  }) : imageId = Value(imageId),
+       bytes = Value(bytes),
+       mimeType = Value(mimeType),
+       createdAt = Value(createdAt);
+  static Insertable<StoredImage> custom({
+    Expression<String>? imageId,
+    Expression<Uint8List>? bytes,
+    Expression<String>? mimeType,
+    Expression<DateTime>? createdAt,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (imageId != null) 'image_id': imageId,
+      if (bytes != null) 'bytes': bytes,
+      if (mimeType != null) 'mime_type': mimeType,
+      if (createdAt != null) 'created_at': createdAt,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  StoredImagesCompanion copyWith({
+    Value<String>? imageId,
+    Value<Uint8List>? bytes,
+    Value<String>? mimeType,
+    Value<DateTime>? createdAt,
+    Value<int>? rowid,
+  }) {
+    return StoredImagesCompanion(
+      imageId: imageId ?? this.imageId,
+      bytes: bytes ?? this.bytes,
+      mimeType: mimeType ?? this.mimeType,
+      createdAt: createdAt ?? this.createdAt,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (imageId.present) {
+      map['image_id'] = Variable<String>(imageId.value);
+    }
+    if (bytes.present) {
+      map['bytes'] = Variable<Uint8List>(bytes.value);
+    }
+    if (mimeType.present) {
+      map['mime_type'] = Variable<String>(mimeType.value);
+    }
+    if (createdAt.present) {
+      map['created_at'] = Variable<DateTime>(createdAt.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('StoredImagesCompanion(')
+          ..write('imageId: $imageId, ')
+          ..write('bytes: $bytes, ')
+          ..write('mimeType: $mimeType, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
 abstract class _$AppDatabase extends GeneratedDatabase {
   _$AppDatabase(QueryExecutor e) : super(e);
   $AppDatabaseManager get managers => $AppDatabaseManager(this);
@@ -1221,6 +1600,7 @@ abstract class _$AppDatabase extends GeneratedDatabase {
   late final $TradeStageHistoriesTable tradeStageHistories =
       $TradeStageHistoriesTable(this);
   late final $PartnersTable partners = $PartnersTable(this);
+  late final $StoredImagesTable storedImages = $StoredImagesTable(this);
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
@@ -1229,6 +1609,7 @@ abstract class _$AppDatabase extends GeneratedDatabase {
     trades,
     tradeStageHistories,
     partners,
+    storedImages,
   ];
   @override
   StreamQueryUpdateRules get streamUpdateRules => const StreamQueryUpdateRules([
@@ -1250,8 +1631,9 @@ typedef $$TradesTableCreateCompanionBuilder =
       required String partnerId,
       required String offerItem,
       required String wantedItem,
-      Value<String?> offerItemImageUrl,
-      Value<String?> wantedItemImageUrl,
+      Value<String?> offerItemImageId,
+      Value<String?> wantedItemImageId,
+      Value<DateTime?> exchangeDateTime,
       required bool isPrepaid,
       Value<String?> memo,
       Value<int> rowid,
@@ -1264,8 +1646,9 @@ typedef $$TradesTableUpdateCompanionBuilder =
       Value<String> partnerId,
       Value<String> offerItem,
       Value<String> wantedItem,
-      Value<String?> offerItemImageUrl,
-      Value<String?> wantedItemImageUrl,
+      Value<String?> offerItemImageId,
+      Value<String?> wantedItemImageId,
+      Value<DateTime?> exchangeDateTime,
       Value<bool> isPrepaid,
       Value<String?> memo,
       Value<int> rowid,
@@ -1339,13 +1722,18 @@ class $$TradesTableFilterComposer
     builder: (column) => ColumnFilters(column),
   );
 
-  ColumnFilters<String> get offerItemImageUrl => $composableBuilder(
-    column: $table.offerItemImageUrl,
+  ColumnFilters<String> get offerItemImageId => $composableBuilder(
+    column: $table.offerItemImageId,
     builder: (column) => ColumnFilters(column),
   );
 
-  ColumnFilters<String> get wantedItemImageUrl => $composableBuilder(
-    column: $table.wantedItemImageUrl,
+  ColumnFilters<String> get wantedItemImageId => $composableBuilder(
+    column: $table.wantedItemImageId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get exchangeDateTime => $composableBuilder(
+    column: $table.exchangeDateTime,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -1424,13 +1812,18 @@ class $$TradesTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
-  ColumnOrderings<String> get offerItemImageUrl => $composableBuilder(
-    column: $table.offerItemImageUrl,
+  ColumnOrderings<String> get offerItemImageId => $composableBuilder(
+    column: $table.offerItemImageId,
     builder: (column) => ColumnOrderings(column),
   );
 
-  ColumnOrderings<String> get wantedItemImageUrl => $composableBuilder(
-    column: $table.wantedItemImageUrl,
+  ColumnOrderings<String> get wantedItemImageId => $composableBuilder(
+    column: $table.wantedItemImageId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get exchangeDateTime => $composableBuilder(
+    column: $table.exchangeDateTime,
     builder: (column) => ColumnOrderings(column),
   );
 
@@ -1478,13 +1871,18 @@ class $$TradesTableAnnotationComposer
     builder: (column) => column,
   );
 
-  GeneratedColumn<String> get offerItemImageUrl => $composableBuilder(
-    column: $table.offerItemImageUrl,
+  GeneratedColumn<String> get offerItemImageId => $composableBuilder(
+    column: $table.offerItemImageId,
     builder: (column) => column,
   );
 
-  GeneratedColumn<String> get wantedItemImageUrl => $composableBuilder(
-    column: $table.wantedItemImageUrl,
+  GeneratedColumn<String> get wantedItemImageId => $composableBuilder(
+    column: $table.wantedItemImageId,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<DateTime> get exchangeDateTime => $composableBuilder(
+    column: $table.exchangeDateTime,
     builder: (column) => column,
   );
 
@@ -1555,8 +1953,9 @@ class $$TradesTableTableManager
                 Value<String> partnerId = const Value.absent(),
                 Value<String> offerItem = const Value.absent(),
                 Value<String> wantedItem = const Value.absent(),
-                Value<String?> offerItemImageUrl = const Value.absent(),
-                Value<String?> wantedItemImageUrl = const Value.absent(),
+                Value<String?> offerItemImageId = const Value.absent(),
+                Value<String?> wantedItemImageId = const Value.absent(),
+                Value<DateTime?> exchangeDateTime = const Value.absent(),
                 Value<bool> isPrepaid = const Value.absent(),
                 Value<String?> memo = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
@@ -1567,8 +1966,9 @@ class $$TradesTableTableManager
                 partnerId: partnerId,
                 offerItem: offerItem,
                 wantedItem: wantedItem,
-                offerItemImageUrl: offerItemImageUrl,
-                wantedItemImageUrl: wantedItemImageUrl,
+                offerItemImageId: offerItemImageId,
+                wantedItemImageId: wantedItemImageId,
+                exchangeDateTime: exchangeDateTime,
                 isPrepaid: isPrepaid,
                 memo: memo,
                 rowid: rowid,
@@ -1581,8 +1981,9 @@ class $$TradesTableTableManager
                 required String partnerId,
                 required String offerItem,
                 required String wantedItem,
-                Value<String?> offerItemImageUrl = const Value.absent(),
-                Value<String?> wantedItemImageUrl = const Value.absent(),
+                Value<String?> offerItemImageId = const Value.absent(),
+                Value<String?> wantedItemImageId = const Value.absent(),
+                Value<DateTime?> exchangeDateTime = const Value.absent(),
                 required bool isPrepaid,
                 Value<String?> memo = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
@@ -1593,8 +1994,9 @@ class $$TradesTableTableManager
                 partnerId: partnerId,
                 offerItem: offerItem,
                 wantedItem: wantedItem,
-                offerItemImageUrl: offerItemImageUrl,
-                wantedItemImageUrl: wantedItemImageUrl,
+                offerItemImageId: offerItemImageId,
+                wantedItemImageId: wantedItemImageId,
+                exchangeDateTime: exchangeDateTime,
                 isPrepaid: isPrepaid,
                 memo: memo,
                 rowid: rowid,
@@ -2124,6 +2526,196 @@ typedef $$PartnersTableProcessedTableManager =
       Partner,
       PrefetchHooks Function()
     >;
+typedef $$StoredImagesTableCreateCompanionBuilder =
+    StoredImagesCompanion Function({
+      required String imageId,
+      required Uint8List bytes,
+      required String mimeType,
+      required DateTime createdAt,
+      Value<int> rowid,
+    });
+typedef $$StoredImagesTableUpdateCompanionBuilder =
+    StoredImagesCompanion Function({
+      Value<String> imageId,
+      Value<Uint8List> bytes,
+      Value<String> mimeType,
+      Value<DateTime> createdAt,
+      Value<int> rowid,
+    });
+
+class $$StoredImagesTableFilterComposer
+    extends Composer<_$AppDatabase, $StoredImagesTable> {
+  $$StoredImagesTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<String> get imageId => $composableBuilder(
+    column: $table.imageId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<Uint8List> get bytes => $composableBuilder(
+    column: $table.bytes,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get mimeType => $composableBuilder(
+    column: $table.mimeType,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnFilters(column),
+  );
+}
+
+class $$StoredImagesTableOrderingComposer
+    extends Composer<_$AppDatabase, $StoredImagesTable> {
+  $$StoredImagesTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<String> get imageId => $composableBuilder(
+    column: $table.imageId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<Uint8List> get bytes => $composableBuilder(
+    column: $table.bytes,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get mimeType => $composableBuilder(
+    column: $table.mimeType,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+}
+
+class $$StoredImagesTableAnnotationComposer
+    extends Composer<_$AppDatabase, $StoredImagesTable> {
+  $$StoredImagesTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<String> get imageId =>
+      $composableBuilder(column: $table.imageId, builder: (column) => column);
+
+  GeneratedColumn<Uint8List> get bytes =>
+      $composableBuilder(column: $table.bytes, builder: (column) => column);
+
+  GeneratedColumn<String> get mimeType =>
+      $composableBuilder(column: $table.mimeType, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get createdAt =>
+      $composableBuilder(column: $table.createdAt, builder: (column) => column);
+}
+
+class $$StoredImagesTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $StoredImagesTable,
+          StoredImage,
+          $$StoredImagesTableFilterComposer,
+          $$StoredImagesTableOrderingComposer,
+          $$StoredImagesTableAnnotationComposer,
+          $$StoredImagesTableCreateCompanionBuilder,
+          $$StoredImagesTableUpdateCompanionBuilder,
+          (
+            StoredImage,
+            BaseReferences<_$AppDatabase, $StoredImagesTable, StoredImage>,
+          ),
+          StoredImage,
+          PrefetchHooks Function()
+        > {
+  $$StoredImagesTableTableManager(_$AppDatabase db, $StoredImagesTable table)
+    : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$StoredImagesTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$StoredImagesTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$StoredImagesTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback:
+              ({
+                Value<String> imageId = const Value.absent(),
+                Value<Uint8List> bytes = const Value.absent(),
+                Value<String> mimeType = const Value.absent(),
+                Value<DateTime> createdAt = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => StoredImagesCompanion(
+                imageId: imageId,
+                bytes: bytes,
+                mimeType: mimeType,
+                createdAt: createdAt,
+                rowid: rowid,
+              ),
+          createCompanionCallback:
+              ({
+                required String imageId,
+                required Uint8List bytes,
+                required String mimeType,
+                required DateTime createdAt,
+                Value<int> rowid = const Value.absent(),
+              }) => StoredImagesCompanion.insert(
+                imageId: imageId,
+                bytes: bytes,
+                mimeType: mimeType,
+                createdAt: createdAt,
+                rowid: rowid,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map(
+                (e) => (
+                  e.readTable<$StoredImagesTable, StoredImage>(table),
+                  BaseReferences<
+                    _$AppDatabase,
+                    $StoredImagesTable,
+                    StoredImage
+                  >(db, table, e),
+                ),
+              )
+              .toList(),
+          prefetchHooksCallback: null,
+        ),
+      );
+}
+
+typedef $$StoredImagesTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $StoredImagesTable,
+      StoredImage,
+      $$StoredImagesTableFilterComposer,
+      $$StoredImagesTableOrderingComposer,
+      $$StoredImagesTableAnnotationComposer,
+      $$StoredImagesTableCreateCompanionBuilder,
+      $$StoredImagesTableUpdateCompanionBuilder,
+      (
+        StoredImage,
+        BaseReferences<_$AppDatabase, $StoredImagesTable, StoredImage>,
+      ),
+      StoredImage,
+      PrefetchHooks Function()
+    >;
 
 class $AppDatabaseManager {
   final _$AppDatabase _db;
@@ -2134,4 +2726,6 @@ class $AppDatabaseManager {
       $$TradeStageHistoriesTableTableManager(_db, _db.tradeStageHistories);
   $$PartnersTableTableManager get partners =>
       $$PartnersTableTableManager(_db, _db.partners);
+  $$StoredImagesTableTableManager get storedImages =>
+      $$StoredImagesTableTableManager(_db, _db.storedImages);
 }

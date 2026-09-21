@@ -7,11 +7,11 @@ class PartnerSearchConditions extends BaseSearchConditions {
   //
 
   /// 取引相手ID
-  final String? partnerId;
+  final List<String>? partnerIds;
 
   //
   // constructor
   //
 
-  const PartnerSearchConditions({this.partnerId});
+  const PartnerSearchConditions({this.partnerIds});
 }

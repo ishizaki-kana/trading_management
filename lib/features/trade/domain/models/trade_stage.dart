@@ -1,5 +1,9 @@
 /// 取引ステージ
 enum TradeStage {
+  //
+  // enum
+  //
+
   /// 取引成立
   agreed(1, '取引成立'),
 
@@ -21,7 +25,9 @@ enum TradeStage {
   /// 取引終了
   completed(7, '取引終了');
 
-  const TradeStage(this.code, this.label);
+  //
+  // fields
+  //
 
   /// 取引進行ステージコード
   final int code;
@@ -29,6 +35,21 @@ enum TradeStage {
   /// ステージ名
   final String label;
 
+  //
+  // constructor
+  //
+
+  const TradeStage(this.code, this.label);
+
+  //
+  // public methods
+  //
+
+  /// 取引ステージ取得
+  ///
+  /// コードに対応する取引ステージを返します。
+  ///
+  /// - [code] 取引ステージコード
   static TradeStage fromCode(int code) {
     return values.firstWhere((s) => s.code == code);
   }

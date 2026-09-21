@@ -9,6 +9,7 @@ class TradeRepository
   //
   // constructor
   //
+
   const TradeRepository(super.database);
 
   //
@@ -28,6 +29,7 @@ class TradeRepository
     final query = database.select(database.trades);
 
     // キーワード（半角スペース・全角スペース・改行区切り）
+    // 希望アイテム名・譲渡アイテム名・メモから部分一致で検索
     if (conditions.keywords case final keywords?
         when keywords.trim().isNotEmpty) {
       final keywordList = keywords.trim().split(RegExp(r'[\s\u3000]+'));
@@ -35,10 +37,11 @@ class TradeRepository
       query.where(
         (trade) => keywordList
             .map((keyword) {
-              final pattern = '%$keyword%'; // 部分一致
+              final pattern = '%${escapeLike(keyword)}%'; // 部分一致
 
-              return trade.offerItem.like(pattern) |
-                  trade.wantedItem.like(pattern);
+              return trade.offerItem.like(pattern, escapeChar: likeEscapeChar) |
+                  trade.wantedItem.like(pattern, escapeChar: likeEscapeChar) |
+                  trade.memo.like(pattern, escapeChar: likeEscapeChar);
             })
             .reduce((cond1, cond2) => cond1 | cond2),
       );

@@ -1,7 +1,10 @@
+import 'dart:convert';
+
 import 'package:drift/drift.dart';
 import 'package:drift_flutter/drift_flutter.dart';
 import 'package:flutter/foundation.dart';
 import 'package:trading_management/core/data/tables/partners.dart';
+import 'package:trading_management/core/data/tables/stored_images.dart';
 
 import '../tables/trade_stages.dart';
 import '../tables/trades.dart';
@@ -12,7 +15,7 @@ part 'app_database.g.dart';
 ///
 /// iOS / Android では端末内の SQLite ファイル、Web では SQLite WASM を
 /// OPFS または IndexedDB に永続化します。
-@DriftDatabase(tables: [Trades, TradeStageHistories, Partners])
+@DriftDatabase(tables: [Trades, TradeStageHistories, Partners, StoredImages])
 class AppDatabase extends _$AppDatabase {
   //
   // constructor
@@ -56,7 +59,9 @@ class AppDatabase extends _$AppDatabase {
     },
   );
 
-  /// 取引種別・受渡種別・支払い順・進捗段階の全組み合わせを投入します。
+  // TODO: 削除する
+
+  /// 取引種別・受渡種別・支払い順・進捗段階・交換日時の全組み合わせを投入します。
   Future<void> _insertDebugData() async {
     final now = DateTime.now();
     final demos =
@@ -69,6 +74,9 @@ class AppDatabase extends _$AppDatabase {
             String partner,
             String offer,
             String wanted,
+            String? offerImageId,
+            String? wantedImageId,
+            DateTime? exchangeDateTime,
             String memo,
             List<int> stages,
           })
@@ -84,24 +92,36 @@ class AppDatabase extends _$AppDatabase {
     }) {
       final paymentLabel = prepaid ? '先払い' : '後払い';
       for (final (index, stages) in patterns.indexed) {
-        final number = demos.length + 1;
-        final (offer, wanted) = switch (type) {
-          1 => ('交換アイテム$number', '希望アイテム$number'),
-          2 => ('譲渡アイテム$number', ''),
-          3 => ('', '買取希望アイテム$number'),
-          _ => throw ArgumentError.value(type, 'type'),
-        };
-        demos.add((
-          id: 'demo-$type-$delivery-${prepaid ? 1 : 0}-${index + 1}',
-          type: type,
-          delivery: delivery,
-          prepaid: prepaid,
-          partner: 'partner${(number - 1) % 3 + 1}',
-          offer: offer,
-          wanted: wanted,
-          memo: '$typeLabel・$deliveryLabel・$paymentLabel・進捗${index + 1}',
-          stages: stages,
-        ));
+        for (final hasExchangeDateTime in [false, true]) {
+          final number = demos.length + 1;
+          final imageId = 'debug-image-${(number - 1) % 3 + 1}';
+          final (offer, wanted, offerImageId, wantedImageId) = switch (type) {
+            1 => ('交換アイテム$number', '希望アイテム$number', imageId, imageId),
+            2 => ('譲渡アイテム$number', '', imageId, null),
+            3 => ('', '買取希望アイテム$number', null, imageId),
+            _ => throw ArgumentError.value(type, 'type'),
+          };
+          demos.add((
+            id:
+                'demo-$type-$delivery-${prepaid ? 1 : 0}-${index + 1}'
+                '${hasExchangeDateTime ? '-datetime' : ''}',
+            type: type,
+            delivery: delivery,
+            prepaid: prepaid,
+            partner: 'partner${(number - 1) % 3 + 1}',
+            offer: offer,
+            wanted: wanted,
+            offerImageId: offerImageId,
+            wantedImageId: wantedImageId,
+            exchangeDateTime: hasExchangeDateTime
+                ? now.add(Duration(days: number))
+                : null,
+            memo:
+                '$typeLabel・$deliveryLabel・$paymentLabel・'
+                '${hasExchangeDateTime ? '日時あり' : '日時なし'}・進捗${index + 1}',
+            stages: stages,
+          ));
+        }
       }
     }
 
@@ -227,6 +247,32 @@ class AppDatabase extends _$AppDatabase {
           username: 'ユーザー3',
         ),
       ], mode: InsertMode.insertOrReplace);
+      batch.insertAll(storedImages, [
+        StoredImagesCompanion.insert(
+          imageId: 'debug-image-1',
+          bytes: base64Decode(
+            'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR4nGN4HxzwHwAGWQKSQ9/igQAAAABJRU5ErkJggg==',
+          ),
+          mimeType: 'image/png',
+          createdAt: now,
+        ),
+        StoredImagesCompanion.insert(
+          imageId: 'debug-image-2',
+          bytes: base64Decode(
+            'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR4nGNwWvr1PwAF5QLcm7MmRwAAAABJRU5ErkJggg==',
+          ),
+          mimeType: 'image/png',
+          createdAt: now,
+        ),
+        StoredImagesCompanion.insert(
+          imageId: 'debug-image-3',
+          bytes: base64Decode(
+            'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR4nGNI2531HwAFoQKLzqe9WAAAAABJRU5ErkJggg==',
+          ),
+          mimeType: 'image/png',
+          createdAt: now,
+        ),
+      ], mode: InsertMode.insertOrReplace);
       batch.insertAll(
         trades,
         demos.map(
@@ -237,6 +283,9 @@ class AppDatabase extends _$AppDatabase {
             partnerId: demo.partner,
             offerItem: demo.offer,
             wantedItem: demo.wanted,
+            offerItemImageId: Value(demo.offerImageId),
+            wantedItemImageId: Value(demo.wantedImageId),
+            exchangeDateTime: Value(demo.exchangeDateTime),
             isPrepaid: demo.prepaid,
             memo: Value(demo.memo),
           ),

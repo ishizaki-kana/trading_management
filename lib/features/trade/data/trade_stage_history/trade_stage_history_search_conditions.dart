@@ -9,12 +9,12 @@ class TradeStageHistorySearchConditions extends BaseSearchConditions {
   /// 取引ID
   final String? tradeId;
 
-  /// 取引ステージコード
-  final int? stageCode;
+  /// 取引IDリスト
+  final List<String>? tradeIds;
 
   //
   // constructor
   //
 
-  const TradeStageHistorySearchConditions({this.tradeId, this.stageCode});
+  const TradeStageHistorySearchConditions({this.tradeId, this.tradeIds});
 }

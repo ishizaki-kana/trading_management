@@ -13,6 +13,7 @@ class TradeStageHistoryRepository
   //
   // constructor
   //
+
   const TradeStageHistoryRepository(super.database);
 
   //
@@ -27,6 +28,14 @@ class TradeStageHistoryRepository
 
     if (conditions.tradeId case final tradeId?) {
       query.where((history) => history.tradeId.equals(tradeId));
+    }
+
+    if (conditions.tradeIds case final tradeIds?) {
+      if (tradeIds.isEmpty) {
+        return Future.value([]);
+      }
+
+      query.where((history) => history.tradeId.isIn(tradeIds));
     }
 
     return query.get();

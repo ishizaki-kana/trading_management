@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:trading_management/core/widgets/form/button/app_button.dart';
-import 'package:trading_management/features/home/presentation/pages/home_screen.dart';
+import 'package:trading_management/features/trade/presentation/screens/trade_list_screen.dart';
 
 class WelcomeScreen extends StatelessWidget {
   const WelcomeScreen({super.key});
@@ -13,7 +13,7 @@ class WelcomeScreen extends StatelessWidget {
         onPressed: () {
           Navigator.of(
             context,
-          ).push(MaterialPageRoute(builder: (context) => HomeScreen()));
+          ).push(MaterialPageRoute(builder: (context) => TradeListScreen()));
         },
       ),
     );

@@ -1,27 +1,32 @@
+import 'package:trading_management/features/trade/application/models/trade_summary.dart';
 import 'package:trading_management/features/trade/domain/models/delivery_type.dart';
 import 'package:trading_management/features/trade/domain/models/trade_stage.dart';
 import 'package:trading_management/features/trade/domain/models/trade_type.dart';
 
 /// 取引ステージ判定クラス
 class TradeStageResolver {
-  const TradeStageResolver();
+  const TradeStageResolver._(); // インスタンス化禁止
+
+  //
+  // public methods
+  //
 
   /// 取引ステージ判定
   ///
   /// 取引種別と引渡種別から取引ステージの一覧を取得します。
   ///
-  /// - [tradeType] 取引種別
-  /// - [deliveryType] 引渡種別
-  /// - [isPrepaid] 先払いかどうか
-  List<TradeStage> resolve({
-    required TradeType tradeType,
-    required DeliveryType deliveryType,
-    required bool isPrepaid,
-  }) {
+  /// - [trade] 取引データ
+  static List<TradeStage> resolve({required TradeSummary trade}) {
+    final tradeType = trade.tradeType;
+    final deliveryType = trade.deliveryType;
+    final isPrepaid = trade.isPrepaid;
+
+    //　手渡し
     if (deliveryType == DeliveryType.handoff) {
       return const [TradeStage.agreed, TradeStage.completed];
     }
 
+    // 郵送
     return switch (tradeType) {
       // 交換
       TradeType.exchange => const [

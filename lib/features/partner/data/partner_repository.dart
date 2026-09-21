@@ -18,6 +18,15 @@ class PartnerRepository
   Future<List<Partner>> getByConditions(PartnerSearchConditions conditions) {
     final query = database.select(database.partners);
 
+    // 取引相手IDリスト
+    if (conditions.partnerIds case final partnerIds?) {
+      if (partnerIds.isEmpty) {
+        return Future.value([]);
+      }
+
+      query.where((partner) => partner.partnerId.isIn(partnerIds));
+    }
+
     return query.get();
   }
 }

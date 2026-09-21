@@ -11,18 +11,39 @@ import 'package:trading_management/features/trade/data/trade/trade_search_condit
 ///
 /// - [onChanged] 検索条件変更時のコールバック
 class TradeSearchAppBar extends StatefulWidget implements PreferredSizeWidget {
+  //
+  // fields
+  //
+
+  /// 検索条件変更時のコールバック
   final ValueChanged<TradeSearchConditions> onChanged;
+
+  //
+  // constructor
+  //
 
   const TradeSearchAppBar({super.key, required this.onChanged});
 
+  //
+  // getter
+  //
+
   @override
   Size get preferredSize => const Size.fromHeight(kToolbarHeight);
+
+  //
+  // public methods
+  //
 
   @override
   State<TradeSearchAppBar> createState() => _SearchAppBarState();
 }
 
 class _SearchAppBarState extends State<TradeSearchAppBar> {
+  //
+  // fields
+  //
+
   /// コントローラー
   final _controller = TextEditingController();
 
@@ -31,6 +52,89 @@ class _SearchAppBarState extends State<TradeSearchAppBar> {
 
   /// 入力中かどうか
   bool _isActive = false;
+
+  //
+  // public methods
+  //
+
+  @override
+  void dispose() {
+    _debounce?.cancel();
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
+    return AppBar(
+      automaticallyImplyLeading: false, // 戻るボタン非表示
+      scrolledUnderElevation: 0,
+      surfaceTintColor: Colors.transparent,
+      title: LayoutBuilder(
+        builder: (context, constraints) {
+          return SizedBox(
+            width: constraints.maxWidth,
+            height: kToolbarHeight,
+            child: Stack(
+              alignment: Alignment.centerLeft,
+              children: [
+                _buildTextBox(theme, constraints),
+                _buildCloseButton(),
+              ],
+            ),
+          );
+        },
+      ),
+    );
+  }
+
+  //
+  // private methods
+  //
+
+  /// テキストボックス作成
+  ///
+  /// - [theme] テーマ
+  /// - [constraints] レイアウト制約
+  Widget _buildTextBox(ThemeData theme, BoxConstraints constraints) {
+    // 閉じるボタンのサイズ
+    const closeButtonWidth = 54.0;
+
+    // テキストボックスのサイズ
+    final double width = _isActive
+        ? (constraints.maxWidth - closeButtonWidth)
+              .clamp(0.0, constraints.maxWidth)
+              .toDouble()
+        : constraints.maxWidth;
+
+    // テキストスタイル
+    final textStyle =
+        theme.textTheme.labelLarge ?? const TextStyle(fontSize: 14);
+
+    return AnimatedContainer(
+      duration: AppDuration.normal,
+      curve: Curves.easeInCubic,
+      width: width,
+      height: constraints.maxHeight,
+      padding: const EdgeInsets.symmetric(vertical: AppSpacing.s8),
+      child: SearchBar(
+        controller: _controller,
+        hintText: '取引を検索',
+        leading: Icon(Icons.search, color: theme.colorScheme.onSurfaceVariant),
+        textStyle: WidgetStatePropertyAll<TextStyle>(textStyle),
+        hintStyle: WidgetStatePropertyAll<TextStyle>(
+          textStyle.copyWith(color: theme.colorScheme.onSurfaceVariant),
+        ),
+        padding: const WidgetStatePropertyAll<EdgeInsets>(
+          EdgeInsets.symmetric(horizontal: AppSpacing.s16),
+        ),
+        onTap: _active,
+        onChanged: _onTextChanged,
+      ),
+    );
+  }
 
   /// テキスト変更イベント
   ///
@@ -58,6 +162,30 @@ class _SearchAppBarState extends State<TradeSearchAppBar> {
     });
   }
 
+  /// 閉じるボタン作成
+  Widget _buildCloseButton() {
+    return Positioned(
+      right: 0,
+      child: ExcludeSemantics(
+        excluding: !_isActive, // 非アクティブ時はアクセシビリティ機能から除外
+        child: IgnorePointer(
+          ignoring: !_isActive, // 非アクティブ時は操作無効
+          child: AnimatedOpacity(
+            opacity: _isActive ? 1 : 0, // 非アクティブ時は非表示
+            duration: AppDuration.normal,
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const SizedBox(width: AppSpacing.s6),
+                CloseButton(onPressed: _deactivate),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
   /// 検索バー非アクティブ化
   ///
   /// 閉じるボタンを非表示にし、キーワード検索を初期化します。
@@ -73,93 +201,5 @@ class _SearchAppBarState extends State<TradeSearchAppBar> {
     });
 
     widget.onChanged(const TradeSearchConditions(keywords: null));
-  }
-
-  @override
-  void dispose() {
-    _debounce?.cancel();
-    _controller.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-
-    return AppBar(
-      automaticallyImplyLeading: false, // 戻るボタン非表示
-      scrolledUnderElevation: 0, // アプリバーの影なし
-      surfaceTintColor: Colors.transparent,
-      title: LayoutBuilder(
-        builder: (context, constraints) {
-          const closeButtonWidth = 54.0;
-
-          return SizedBox(
-            width: constraints.maxWidth,
-            height: kToolbarHeight,
-            child: Stack(
-              alignment: Alignment.centerLeft,
-              children: [
-                // テキストボックス
-                AnimatedContainer(
-                  duration: AppDuration.normal,
-                  curve: Curves.easeInCubic,
-                  width: _isActive
-                      ? constraints.maxWidth - closeButtonWidth
-                      : constraints.maxWidth,
-                  child: SearchBar(
-                    controller: _controller,
-                    hintText: '取引を検索',
-                    constraints: const BoxConstraints(
-                      minHeight: 40,
-                      maxHeight: 40,
-                    ), // 高さ 40px 固定
-                    textStyle: WidgetStatePropertyAll<TextStyle>(
-                      theme.textTheme.labelLarge ?? TextStyle(fontSize: 14),
-                    ),
-                    hintStyle: WidgetStatePropertyAll<TextStyle>(
-                      theme.textTheme.labelLarge?.copyWith(
-                            color: theme.colorScheme.onSurfaceVariant,
-                          ) ??
-                          TextStyle(fontSize: 14),
-                    ),
-                    leading: Icon(
-                      Icons.search,
-                      color: theme.colorScheme.onSurfaceVariant,
-                    ),
-                    padding: const WidgetStatePropertyAll<EdgeInsets>(
-                      EdgeInsets.symmetric(horizontal: AppSpacing.s16),
-                    ),
-                    onTap: _active,
-                    onChanged: _onTextChanged,
-                  ),
-                ),
-                // 閉じるボタン
-                Positioned(
-                  right: 0,
-                  child: IgnorePointer(
-                    ignoring: !_isActive,
-                    child: AnimatedOpacity(
-                      opacity: _isActive ? 1 : 0,
-                      duration: AppDuration.normal,
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          const SizedBox(width: AppSpacing.s6),
-                          IconButton(
-                            icon: const Icon(Icons.close),
-                            onPressed: _deactivate,
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          );
-        },
-      ),
-    );
   }
 }

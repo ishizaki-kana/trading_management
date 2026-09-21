@@ -16,6 +16,9 @@ abstract class BaseRepository<
   /// データベース
   final AppDatabase database;
 
+  /// LIKE 検索で使用するエスケープ文字
+  final likeEscapeChar = '\\';
+
   //
   // constructor
   //
@@ -67,5 +70,17 @@ abstract class BaseRepository<
   /// - [id] 削除するエンティティのID
   Future<void> delete(Id id) {
     throw UnimplementedError('delete is not implemented');
+  }
+
+  /// ワイルドカードエスケープ
+  ///
+  /// `\`, `%`, `_` を文字列として扱えるようにします。
+  ///
+  /// - [value] 値
+  String escapeLike(String value) {
+    return value
+        .replaceAll('\\', r'\\')
+        .replaceAll('%', r'\%')
+        .replaceAll('_', r'\_');
   }
 }
