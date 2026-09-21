@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:trading_management/core/constants/app_message.dart';
 import 'package:trading_management/core/data/database/app_database.scope.dart';
 import 'package:trading_management/core/theme/app_spacing.dart';
 import 'package:trading_management/core/widgets/layout/page/app_page.dart';
@@ -30,7 +31,7 @@ class _TradeListScreenState extends State<TradeListScreen> {
   //
 
   /// 取引リスト
-  List<TradeSummary> _trades = [];
+  List<TradeSummary> _trades = const [];
 
   /// 検索条件
   TradeSearchConditions _conditions = const TradeSearchConditions();
@@ -39,7 +40,7 @@ class _TradeListScreenState extends State<TradeListScreen> {
   int _currentRequestId = 0;
 
   /// メッセージ
-  String? _message;
+  ({String message, IconData icon})? _message;
 
   /// 読み込み処理を開始済みかどうか
   bool _isLoadStarted = false;
@@ -68,7 +69,8 @@ class _TradeListScreenState extends State<TradeListScreen> {
   Widget build(BuildContext context) {
     return AppPage(
       isLoading: _isLoading,
-      message: _message?.toString(),
+      message: _message?.message,
+      messageIcon: _message?.icon,
       appBar: TradeSearchAppBar(onChanged: _searchTrades),
       body: ListView.separated(
         padding: EdgeInsets.symmetric(
@@ -113,7 +115,9 @@ class _TradeListScreenState extends State<TradeListScreen> {
 
       setState(() {
         _trades = trades;
-        _message = trades.isEmpty ? 'メッセージ' : null;
+        _message = trades.isEmpty
+            ? (message: AppMessage.dataNotFound, icon: Icons.inbox_outlined)
+            : null;
         _isLoading = false;
       });
     } catch (error) {
@@ -122,7 +126,7 @@ class _TradeListScreenState extends State<TradeListScreen> {
       }
 
       setState(() {
-        _message = error.toString();
+        _message = (message: error.toString(), icon: Icons.error_outline);
         _isLoading = false;
       });
     }
