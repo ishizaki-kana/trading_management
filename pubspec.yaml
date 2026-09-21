@@ -37,6 +37,9 @@ dependencies:
   cupertino_icons: ^1.0.8
   font_awesome_flutter: ^11.0.0
 
+  # 日時
+  intl: ^0.20.2
+
   # 画像のキャッシュ
   cached_network_image: ^3.4.1
 

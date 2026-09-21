@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:trading_management/core/theme/app_radius.dart';
 import 'package:trading_management/core/theme/app_spacing.dart';
+import 'package:trading_management/core/utils/date_time_formatter.dart';
 import 'package:trading_management/core/widgets/form/button/app_button.dart';
 import 'package:trading_management/core/widgets/form/chip/app_chip.dart';
 import 'package:trading_management/core/widgets/layout/section_card/section_card.dart';
@@ -46,38 +47,32 @@ class TradeCard extends StatelessWidget {
     return SectionCard(
       leading: _buildTradeChip(),
       title: '${trade.partnerUserId}（@${trade.partnerUsername}） さん',
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // 取引対象
-          const SizedBox(height: AppSpacing.s12),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              _buildTradeItem(true, theme),
-              Icon(Icons.compare_arrows_outlined),
-              _buildTradeItem(false, theme),
-            ],
-          ),
-          // 取引ステータス
-          const SizedBox(height: AppSpacing.s16),
-          TradeStageIndicator(
-            stages: stages,
-            completedStages: trade.completedStages,
-          ),
-          // メモ
-          if (trade.memo != null) ...[
-            const SizedBox(height: AppSpacing.s16),
-            SectionCard(
-              title: 'メモ',
-              color: theme.colorScheme.surfaceContainerLow,
-              child: Text(trade.memo!),
+      child: Padding(
+        padding: const EdgeInsets.only(top: AppSpacing.s20),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          spacing: AppSpacing.s16,
+          children: [
+            // 取引対象
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                _buildTradeItem(true, theme),
+                Icon(Icons.compare_arrows_outlined),
+                _buildTradeItem(false, theme),
+              ],
             ),
+            // 取引ステータス
+            TradeStageIndicator(
+              stages: stages,
+              completedStages: trade.completedStages,
+            ),
+            // 交換日時・メモ
+            _buildSectionCardList(theme),
+            // 取引ステージ進行ボタン
+            _buildNextStageButton(stages),
           ],
-          // 取引ステージ進行ボタン
-          const SizedBox(height: AppSpacing.s16),
-          _buildNextStageButton(stages),
-        ],
+        ),
       ),
     );
   }
@@ -125,7 +120,7 @@ class TradeCard extends StatelessWidget {
       );
     } else {
       content = AppStoredImage(
-        imageBytes: image != null ? image!.bytes : null,
+        imageBytes: image?.bytes,
         width: size,
         height: size,
         borderRadius: AppRadius.sm,
@@ -143,6 +138,38 @@ class TradeCard extends StatelessWidget {
             labelStyle: theme.textTheme.bodySmall,
           ),
       ],
+    );
+  }
+
+  /// セクションカードリスト作成
+  ///
+  /// - [theme] テーマ
+  Widget _buildSectionCardList(ThemeData theme) {
+    final Map<String, String?> contents = {
+      if (trade.exchangeDateTime != null)
+        '交換日時': DateTimeFormatter.formatDate(trade.exchangeDateTime!),
+      if (trade.memo != null) 'メモ': trade.memo,
+    };
+
+    if (contents.isEmpty) {
+      return const SizedBox.shrink();
+    }
+
+    return Padding(
+      padding: const EdgeInsets.only(top: AppSpacing.s12),
+      child: Column(
+        spacing: AppSpacing.s8,
+        children: contents.entries
+            .where((entry) => entry.value?.isNotEmpty == true)
+            .map(
+              (entry) => SectionCard(
+                title: entry.key,
+                color: theme.colorScheme.surfaceContainerLow,
+                child: Text(entry.value!),
+              ),
+            )
+            .toList(),
+      ),
     );
   }
 
