@@ -97,18 +97,28 @@ class $TradesTable extends Trades with TableInfo<$TradesTable, Trade> {
         type: DriftSqlType.string,
         requiredDuringInsert: false,
       );
-  static const VerificationMeta _exchangeDateTimeMeta = const VerificationMeta(
-    'exchangeDateTime',
+  static const VerificationMeta _tradedAtMeta = const VerificationMeta(
+    'tradedAt',
   );
   @override
-  late final GeneratedColumn<DateTime> exchangeDateTime =
-      GeneratedColumn<DateTime>(
-        'exchange_date_time',
-        aliasedName,
-        true,
-        type: DriftSqlType.dateTime,
-        requiredDuringInsert: false,
-      );
+  late final GeneratedColumn<DateTime> tradedAt = GeneratedColumn<DateTime>(
+    'traded_at',
+    aliasedName,
+    true,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _locationMeta = const VerificationMeta(
+    'location',
+  );
+  @override
+  late final GeneratedColumn<String> location = GeneratedColumn<String>(
+    'location',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
   static const VerificationMeta _isPrepaidMeta = const VerificationMeta(
     'isPrepaid',
   );
@@ -142,7 +152,8 @@ class $TradesTable extends Trades with TableInfo<$TradesTable, Trade> {
     wantedItem,
     offerItemImageId,
     wantedItemImageId,
-    exchangeDateTime,
+    tradedAt,
+    location,
     isPrepaid,
     memo,
   ];
@@ -230,13 +241,16 @@ class $TradesTable extends Trades with TableInfo<$TradesTable, Trade> {
         ),
       );
     }
-    if (data.containsKey('exchange_date_time')) {
+    if (data.containsKey('traded_at')) {
       context.handle(
-        _exchangeDateTimeMeta,
-        exchangeDateTime.isAcceptableOrUnknown(
-          data['exchange_date_time']!,
-          _exchangeDateTimeMeta,
-        ),
+        _tradedAtMeta,
+        tradedAt.isAcceptableOrUnknown(data['traded_at']!, _tradedAtMeta),
+      );
+    }
+    if (data.containsKey('location')) {
+      context.handle(
+        _locationMeta,
+        location.isAcceptableOrUnknown(data['location']!, _locationMeta),
       );
     }
     if (data.containsKey('is_prepaid')) {
@@ -294,9 +308,13 @@ class $TradesTable extends Trades with TableInfo<$TradesTable, Trade> {
         DriftSqlType.string,
         data['${effectivePrefix}wanted_item_image_id'],
       ),
-      exchangeDateTime: attachedDatabase.typeMapping.read(
+      tradedAt: attachedDatabase.typeMapping.read(
         DriftSqlType.dateTime,
-        data['${effectivePrefix}exchange_date_time'],
+        data['${effectivePrefix}traded_at'],
+      ),
+      location: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}location'],
       ),
       isPrepaid: attachedDatabase.typeMapping.read(
         DriftSqlType.bool,
@@ -334,14 +352,17 @@ class Trade extends DataClass implements Insertable<Trade> {
   /// 受け取りたいアイテム名
   final String wantedItem;
 
-  /// 譲渡するアイテムの画像URL
+  /// 譲渡するアイテムの画像ID
   final String? offerItemImageId;
 
-  /// 受け取りたいアイテムの画像URL
+  /// 受け取りたいアイテムの画像ID
   final String? wantedItemImageId;
 
-  /// 交換日時
-  final DateTime? exchangeDateTime;
+  /// 取引日時
+  final DateTime? tradedAt;
+
+  /// 取引場所
+  final String? location;
 
   /// 先払いかどうか
   final bool isPrepaid;
@@ -357,7 +378,8 @@ class Trade extends DataClass implements Insertable<Trade> {
     required this.wantedItem,
     this.offerItemImageId,
     this.wantedItemImageId,
-    this.exchangeDateTime,
+    this.tradedAt,
+    this.location,
     required this.isPrepaid,
     this.memo,
   });
@@ -376,8 +398,11 @@ class Trade extends DataClass implements Insertable<Trade> {
     if (!nullToAbsent || wantedItemImageId != null) {
       map['wanted_item_image_id'] = Variable<String>(wantedItemImageId);
     }
-    if (!nullToAbsent || exchangeDateTime != null) {
-      map['exchange_date_time'] = Variable<DateTime>(exchangeDateTime);
+    if (!nullToAbsent || tradedAt != null) {
+      map['traded_at'] = Variable<DateTime>(tradedAt);
+    }
+    if (!nullToAbsent || location != null) {
+      map['location'] = Variable<String>(location);
     }
     map['is_prepaid'] = Variable<bool>(isPrepaid);
     if (!nullToAbsent || memo != null) {
@@ -400,9 +425,12 @@ class Trade extends DataClass implements Insertable<Trade> {
       wantedItemImageId: wantedItemImageId == null && nullToAbsent
           ? const Value.absent()
           : Value(wantedItemImageId),
-      exchangeDateTime: exchangeDateTime == null && nullToAbsent
+      tradedAt: tradedAt == null && nullToAbsent
           ? const Value.absent()
-          : Value(exchangeDateTime),
+          : Value(tradedAt),
+      location: location == null && nullToAbsent
+          ? const Value.absent()
+          : Value(location),
       isPrepaid: Value(isPrepaid),
       memo: memo == null && nullToAbsent ? const Value.absent() : Value(memo),
     );
@@ -424,9 +452,8 @@ class Trade extends DataClass implements Insertable<Trade> {
       wantedItemImageId: serializer.fromJson<String?>(
         json['wantedItemImageId'],
       ),
-      exchangeDateTime: serializer.fromJson<DateTime?>(
-        json['exchangeDateTime'],
-      ),
+      tradedAt: serializer.fromJson<DateTime?>(json['tradedAt']),
+      location: serializer.fromJson<String?>(json['location']),
       isPrepaid: serializer.fromJson<bool>(json['isPrepaid']),
       memo: serializer.fromJson<String?>(json['memo']),
     );
@@ -443,7 +470,8 @@ class Trade extends DataClass implements Insertable<Trade> {
       'wantedItem': serializer.toJson<String>(wantedItem),
       'offerItemImageId': serializer.toJson<String?>(offerItemImageId),
       'wantedItemImageId': serializer.toJson<String?>(wantedItemImageId),
-      'exchangeDateTime': serializer.toJson<DateTime?>(exchangeDateTime),
+      'tradedAt': serializer.toJson<DateTime?>(tradedAt),
+      'location': serializer.toJson<String?>(location),
       'isPrepaid': serializer.toJson<bool>(isPrepaid),
       'memo': serializer.toJson<String?>(memo),
     };
@@ -458,7 +486,8 @@ class Trade extends DataClass implements Insertable<Trade> {
     String? wantedItem,
     Value<String?> offerItemImageId = const Value.absent(),
     Value<String?> wantedItemImageId = const Value.absent(),
-    Value<DateTime?> exchangeDateTime = const Value.absent(),
+    Value<DateTime?> tradedAt = const Value.absent(),
+    Value<String?> location = const Value.absent(),
     bool? isPrepaid,
     Value<String?> memo = const Value.absent(),
   }) => Trade(
@@ -474,9 +503,8 @@ class Trade extends DataClass implements Insertable<Trade> {
     wantedItemImageId: wantedItemImageId.present
         ? wantedItemImageId.value
         : this.wantedItemImageId,
-    exchangeDateTime: exchangeDateTime.present
-        ? exchangeDateTime.value
-        : this.exchangeDateTime,
+    tradedAt: tradedAt.present ? tradedAt.value : this.tradedAt,
+    location: location.present ? location.value : this.location,
     isPrepaid: isPrepaid ?? this.isPrepaid,
     memo: memo.present ? memo.value : this.memo,
   );
@@ -500,9 +528,8 @@ class Trade extends DataClass implements Insertable<Trade> {
       wantedItemImageId: data.wantedItemImageId.present
           ? data.wantedItemImageId.value
           : this.wantedItemImageId,
-      exchangeDateTime: data.exchangeDateTime.present
-          ? data.exchangeDateTime.value
-          : this.exchangeDateTime,
+      tradedAt: data.tradedAt.present ? data.tradedAt.value : this.tradedAt,
+      location: data.location.present ? data.location.value : this.location,
       isPrepaid: data.isPrepaid.present ? data.isPrepaid.value : this.isPrepaid,
       memo: data.memo.present ? data.memo.value : this.memo,
     );
@@ -519,7 +546,8 @@ class Trade extends DataClass implements Insertable<Trade> {
           ..write('wantedItem: $wantedItem, ')
           ..write('offerItemImageId: $offerItemImageId, ')
           ..write('wantedItemImageId: $wantedItemImageId, ')
-          ..write('exchangeDateTime: $exchangeDateTime, ')
+          ..write('tradedAt: $tradedAt, ')
+          ..write('location: $location, ')
           ..write('isPrepaid: $isPrepaid, ')
           ..write('memo: $memo')
           ..write(')'))
@@ -536,7 +564,8 @@ class Trade extends DataClass implements Insertable<Trade> {
     wantedItem,
     offerItemImageId,
     wantedItemImageId,
-    exchangeDateTime,
+    tradedAt,
+    location,
     isPrepaid,
     memo,
   );
@@ -552,7 +581,8 @@ class Trade extends DataClass implements Insertable<Trade> {
           other.wantedItem == this.wantedItem &&
           other.offerItemImageId == this.offerItemImageId &&
           other.wantedItemImageId == this.wantedItemImageId &&
-          other.exchangeDateTime == this.exchangeDateTime &&
+          other.tradedAt == this.tradedAt &&
+          other.location == this.location &&
           other.isPrepaid == this.isPrepaid &&
           other.memo == this.memo);
 }
@@ -566,7 +596,8 @@ class TradesCompanion extends UpdateCompanion<Trade> {
   final Value<String> wantedItem;
   final Value<String?> offerItemImageId;
   final Value<String?> wantedItemImageId;
-  final Value<DateTime?> exchangeDateTime;
+  final Value<DateTime?> tradedAt;
+  final Value<String?> location;
   final Value<bool> isPrepaid;
   final Value<String?> memo;
   final Value<int> rowid;
@@ -579,7 +610,8 @@ class TradesCompanion extends UpdateCompanion<Trade> {
     this.wantedItem = const Value.absent(),
     this.offerItemImageId = const Value.absent(),
     this.wantedItemImageId = const Value.absent(),
-    this.exchangeDateTime = const Value.absent(),
+    this.tradedAt = const Value.absent(),
+    this.location = const Value.absent(),
     this.isPrepaid = const Value.absent(),
     this.memo = const Value.absent(),
     this.rowid = const Value.absent(),
@@ -593,7 +625,8 @@ class TradesCompanion extends UpdateCompanion<Trade> {
     required String wantedItem,
     this.offerItemImageId = const Value.absent(),
     this.wantedItemImageId = const Value.absent(),
-    this.exchangeDateTime = const Value.absent(),
+    this.tradedAt = const Value.absent(),
+    this.location = const Value.absent(),
     required bool isPrepaid,
     this.memo = const Value.absent(),
     this.rowid = const Value.absent(),
@@ -613,7 +646,8 @@ class TradesCompanion extends UpdateCompanion<Trade> {
     Expression<String>? wantedItem,
     Expression<String>? offerItemImageId,
     Expression<String>? wantedItemImageId,
-    Expression<DateTime>? exchangeDateTime,
+    Expression<DateTime>? tradedAt,
+    Expression<String>? location,
     Expression<bool>? isPrepaid,
     Expression<String>? memo,
     Expression<int>? rowid,
@@ -627,7 +661,8 @@ class TradesCompanion extends UpdateCompanion<Trade> {
       if (wantedItem != null) 'wanted_item': wantedItem,
       if (offerItemImageId != null) 'offer_item_image_id': offerItemImageId,
       if (wantedItemImageId != null) 'wanted_item_image_id': wantedItemImageId,
-      if (exchangeDateTime != null) 'exchange_date_time': exchangeDateTime,
+      if (tradedAt != null) 'traded_at': tradedAt,
+      if (location != null) 'location': location,
       if (isPrepaid != null) 'is_prepaid': isPrepaid,
       if (memo != null) 'memo': memo,
       if (rowid != null) 'rowid': rowid,
@@ -643,7 +678,8 @@ class TradesCompanion extends UpdateCompanion<Trade> {
     Value<String>? wantedItem,
     Value<String?>? offerItemImageId,
     Value<String?>? wantedItemImageId,
-    Value<DateTime?>? exchangeDateTime,
+    Value<DateTime?>? tradedAt,
+    Value<String?>? location,
     Value<bool>? isPrepaid,
     Value<String?>? memo,
     Value<int>? rowid,
@@ -657,7 +693,8 @@ class TradesCompanion extends UpdateCompanion<Trade> {
       wantedItem: wantedItem ?? this.wantedItem,
       offerItemImageId: offerItemImageId ?? this.offerItemImageId,
       wantedItemImageId: wantedItemImageId ?? this.wantedItemImageId,
-      exchangeDateTime: exchangeDateTime ?? this.exchangeDateTime,
+      tradedAt: tradedAt ?? this.tradedAt,
+      location: location ?? this.location,
       isPrepaid: isPrepaid ?? this.isPrepaid,
       memo: memo ?? this.memo,
       rowid: rowid ?? this.rowid,
@@ -691,8 +728,11 @@ class TradesCompanion extends UpdateCompanion<Trade> {
     if (wantedItemImageId.present) {
       map['wanted_item_image_id'] = Variable<String>(wantedItemImageId.value);
     }
-    if (exchangeDateTime.present) {
-      map['exchange_date_time'] = Variable<DateTime>(exchangeDateTime.value);
+    if (tradedAt.present) {
+      map['traded_at'] = Variable<DateTime>(tradedAt.value);
+    }
+    if (location.present) {
+      map['location'] = Variable<String>(location.value);
     }
     if (isPrepaid.present) {
       map['is_prepaid'] = Variable<bool>(isPrepaid.value);
@@ -717,7 +757,8 @@ class TradesCompanion extends UpdateCompanion<Trade> {
           ..write('wantedItem: $wantedItem, ')
           ..write('offerItemImageId: $offerItemImageId, ')
           ..write('wantedItemImageId: $wantedItemImageId, ')
-          ..write('exchangeDateTime: $exchangeDateTime, ')
+          ..write('tradedAt: $tradedAt, ')
+          ..write('location: $location, ')
           ..write('isPrepaid: $isPrepaid, ')
           ..write('memo: $memo, ')
           ..write('rowid: $rowid')
@@ -1633,7 +1674,8 @@ typedef $$TradesTableCreateCompanionBuilder =
       required String wantedItem,
       Value<String?> offerItemImageId,
       Value<String?> wantedItemImageId,
-      Value<DateTime?> exchangeDateTime,
+      Value<DateTime?> tradedAt,
+      Value<String?> location,
       required bool isPrepaid,
       Value<String?> memo,
       Value<int> rowid,
@@ -1648,7 +1690,8 @@ typedef $$TradesTableUpdateCompanionBuilder =
       Value<String> wantedItem,
       Value<String?> offerItemImageId,
       Value<String?> wantedItemImageId,
-      Value<DateTime?> exchangeDateTime,
+      Value<DateTime?> tradedAt,
+      Value<String?> location,
       Value<bool> isPrepaid,
       Value<String?> memo,
       Value<int> rowid,
@@ -1732,8 +1775,13 @@ class $$TradesTableFilterComposer
     builder: (column) => ColumnFilters(column),
   );
 
-  ColumnFilters<DateTime> get exchangeDateTime => $composableBuilder(
-    column: $table.exchangeDateTime,
+  ColumnFilters<DateTime> get tradedAt => $composableBuilder(
+    column: $table.tradedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get location => $composableBuilder(
+    column: $table.location,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -1822,8 +1870,13 @@ class $$TradesTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
-  ColumnOrderings<DateTime> get exchangeDateTime => $composableBuilder(
-    column: $table.exchangeDateTime,
+  ColumnOrderings<DateTime> get tradedAt => $composableBuilder(
+    column: $table.tradedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get location => $composableBuilder(
+    column: $table.location,
     builder: (column) => ColumnOrderings(column),
   );
 
@@ -1881,10 +1934,11 @@ class $$TradesTableAnnotationComposer
     builder: (column) => column,
   );
 
-  GeneratedColumn<DateTime> get exchangeDateTime => $composableBuilder(
-    column: $table.exchangeDateTime,
-    builder: (column) => column,
-  );
+  GeneratedColumn<DateTime> get tradedAt =>
+      $composableBuilder(column: $table.tradedAt, builder: (column) => column);
+
+  GeneratedColumn<String> get location =>
+      $composableBuilder(column: $table.location, builder: (column) => column);
 
   GeneratedColumn<bool> get isPrepaid =>
       $composableBuilder(column: $table.isPrepaid, builder: (column) => column);
@@ -1955,7 +2009,8 @@ class $$TradesTableTableManager
                 Value<String> wantedItem = const Value.absent(),
                 Value<String?> offerItemImageId = const Value.absent(),
                 Value<String?> wantedItemImageId = const Value.absent(),
-                Value<DateTime?> exchangeDateTime = const Value.absent(),
+                Value<DateTime?> tradedAt = const Value.absent(),
+                Value<String?> location = const Value.absent(),
                 Value<bool> isPrepaid = const Value.absent(),
                 Value<String?> memo = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
@@ -1968,7 +2023,8 @@ class $$TradesTableTableManager
                 wantedItem: wantedItem,
                 offerItemImageId: offerItemImageId,
                 wantedItemImageId: wantedItemImageId,
-                exchangeDateTime: exchangeDateTime,
+                tradedAt: tradedAt,
+                location: location,
                 isPrepaid: isPrepaid,
                 memo: memo,
                 rowid: rowid,
@@ -1983,7 +2039,8 @@ class $$TradesTableTableManager
                 required String wantedItem,
                 Value<String?> offerItemImageId = const Value.absent(),
                 Value<String?> wantedItemImageId = const Value.absent(),
-                Value<DateTime?> exchangeDateTime = const Value.absent(),
+                Value<DateTime?> tradedAt = const Value.absent(),
+                Value<String?> location = const Value.absent(),
                 required bool isPrepaid,
                 Value<String?> memo = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
@@ -1996,7 +2053,8 @@ class $$TradesTableTableManager
                 wantedItem: wantedItem,
                 offerItemImageId: offerItemImageId,
                 wantedItemImageId: wantedItemImageId,
-                exchangeDateTime: exchangeDateTime,
+                tradedAt: tradedAt,
+                location: location,
                 isPrepaid: isPrepaid,
                 memo: memo,
                 rowid: rowid,

@@ -31,8 +31,11 @@ class Trades extends Table {
   /// 受け取りたいアイテムの画像ID
   TextColumn get wantedItemImageId => text().nullable()();
 
-  /// 交換日時
-  DateTimeColumn get exchangeDateTime => dateTime().nullable()();
+  /// 取引日時
+  DateTimeColumn get tradedAt => dateTime().nullable()();
+
+  /// 取引場所
+  TextColumn get location => text().nullable()();
 
   /// 先払いかどうか
   BoolColumn get isPrepaid => boolean()();

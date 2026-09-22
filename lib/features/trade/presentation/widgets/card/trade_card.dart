@@ -146,9 +146,11 @@ class TradeCard extends StatelessWidget {
   /// - [theme] テーマ
   Widget _buildSectionCardList(ThemeData theme) {
     final Map<String, String?> contents = {
-      if (trade.exchangeDateTime != null)
-        '交換日時': DateTimeFormatter.formatDate(trade.exchangeDateTime!),
-      if (trade.memo != null) 'メモ': trade.memo,
+      // 手渡しのとき、取引日時表示
+      if (trade.deliveryType == DeliveryType.handoff)
+        '取引日時 / 場所':
+            '${DateTimeFormatter.formatDate(trade.tradedAt)} ${trade.location ?? ''}',
+      if (trade.memo case final memo? when memo.isNotEmpty) 'メモ': memo,
     };
 
     if (contents.isEmpty) {
@@ -165,7 +167,7 @@ class TradeCard extends StatelessWidget {
               (entry) => SectionCard(
                 title: entry.key,
                 color: theme.colorScheme.surfaceContainerLow,
-                child: Text(entry.value!),
+                child: Text(entry.value!.trim()),
               ),
             )
             .toList(),

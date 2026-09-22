@@ -42,7 +42,8 @@ class TradeMapper {
       offerItem: TradeItem(itemName: trade.offerItem, image: offerItemImage),
       wantedItem: TradeItem(itemName: trade.wantedItem, image: wantedItemImage),
       completedStages: completedStages,
-      exchangeDateTime: trade.exchangeDateTime,
+      tradedAt: trade.tradedAt,
+      location: trade.location,
       isPrepaid: trade.isPrepaid,
       memo: trade.memo,
     );

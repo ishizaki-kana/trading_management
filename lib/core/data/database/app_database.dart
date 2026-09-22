@@ -77,6 +77,7 @@ class AppDatabase extends _$AppDatabase {
             String? offerImageId,
             String? wantedImageId,
             DateTime? exchangeDateTime,
+            String? location,
             String memo,
             List<int> stages,
           })
@@ -94,7 +95,15 @@ class AppDatabase extends _$AppDatabase {
       for (final (index, stages) in patterns.indexed) {
         for (final hasExchangeDateTime in [false, true]) {
           final number = demos.length + 1;
-          final imageId = 'debug-image-${(number - 1) % 3 + 1}';
+          final imageId = hasExchangeDateTime
+              ? 'debug-image-${(number - 1) % 3 + 1}'
+              : null;
+          final location =
+              delivery == 1 && (!hasExchangeDateTime || index.isEven)
+              ? const ['東京駅', '新宿駅', '池袋駅'][(number - 1) % 3]
+              : null;
+          final imageLabel = imageId == null ? '画像なし' : '画像あり';
+          final locationLabel = location == null ? '場所なし' : '場所あり';
           final (offer, wanted, offerImageId, wantedImageId) = switch (type) {
             1 => ('交換アイテム$number', '希望アイテム$number', imageId, imageId),
             2 => ('譲渡アイテム$number', '', imageId, null),
@@ -116,9 +125,11 @@ class AppDatabase extends _$AppDatabase {
             exchangeDateTime: hasExchangeDateTime
                 ? now.add(Duration(days: number))
                 : null,
+            location: location,
             memo:
                 '$typeLabel・$deliveryLabel・$paymentLabel・'
-                '${hasExchangeDateTime ? '日時あり' : '日時なし'}・進捗${index + 1}',
+                '${hasExchangeDateTime ? '日時あり' : '日時なし'}・'
+                '$locationLabel・$imageLabel・進捗${index + 1}',
             stages: stages,
           ));
         }
@@ -285,7 +296,8 @@ class AppDatabase extends _$AppDatabase {
             wantedItem: demo.wanted,
             offerItemImageId: Value(demo.offerImageId),
             wantedItemImageId: Value(demo.wantedImageId),
-            exchangeDateTime: Value(demo.exchangeDateTime),
+            tradedAt: Value(demo.exchangeDateTime),
+            location: Value(demo.location),
             isPrepaid: demo.prepaid,
             memo: Value(demo.memo),
           ),

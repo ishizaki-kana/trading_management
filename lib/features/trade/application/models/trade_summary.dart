@@ -33,8 +33,11 @@ class TradeSummary {
   /// 取引ステージ完了済みリスト
   final List<TradeStage> completedStages;
 
-  /// 交換日時
-  final DateTime? exchangeDateTime;
+  /// 取引日時
+  final DateTime? tradedAt;
+
+  /// 取引場所
+  final String? location;
 
   /// 先払いかどうか
   final bool isPrepaid;
@@ -55,7 +58,8 @@ class TradeSummary {
     required this.offerItem,
     required this.wantedItem,
     required this.completedStages,
-    required this.exchangeDateTime,
+    required this.tradedAt,
+    required this.location,
     required this.isPrepaid,
     required this.memo,
   });

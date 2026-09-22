@@ -18,9 +18,12 @@ class DateTimeFormatter {
   /// 日付変換
   ///
   /// 日時型のデータを`yyyy/MM/dd`形式の文字列に変換します。
+  /// `null`の場合は空文字列を返却します。
   ///
   /// - [datetime] 日時
-  static String formatDate(DateTime datetime) {
+  static String formatDate(DateTime? datetime) {
+    if (datetime == null) return '';
+
     return _dateFormatter.format(datetime);
   }
 }
