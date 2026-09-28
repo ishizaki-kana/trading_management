@@ -8,6 +8,7 @@ import 'package:trading_management/core/widgets/feedback/message/message.dart';
 /// - [body] ボディ
 /// - [message] メッセージ
 /// - [messageIcon] メッセージ画面のアイコン
+/// - [backgroundColor] 背景色
 /// - [isLoading] ローディング中かどうか
 class AppPage extends StatelessWidget {
   //
@@ -26,6 +27,9 @@ class AppPage extends StatelessWidget {
   /// メッセージ画面のアイコン
   final IconData? messageIcon;
 
+  /// 背景色
+  final Color? backgroundColor;
+
   /// ローディング中かどうか
   final bool isLoading;
 
@@ -39,6 +43,7 @@ class AppPage extends StatelessWidget {
     required this.body,
     this.message,
     this.messageIcon,
+    this.backgroundColor,
     this.isLoading = false,
   });
 
@@ -57,6 +62,10 @@ class AppPage extends StatelessWidget {
       (false, null) => body,
     };
 
-    return Scaffold(appBar: appBar, body: displayBody);
+    return Scaffold(
+      appBar: appBar,
+      body: displayBody,
+      backgroundColor: backgroundColor,
+    );
   }
 }

@@ -15,6 +15,14 @@ class PartnerRepository
   //
 
   @override
+  Future<Partner?> getById(String id) {
+    final query = database.select(database.partners)
+      ..where((partner) => partner.partnerId.equals(id));
+
+    return query.getSingleOrNull();
+  }
+
+  @override
   Future<List<Partner>> getByConditions(PartnerSearchConditions conditions) {
     final query = database.select(database.partners);
 

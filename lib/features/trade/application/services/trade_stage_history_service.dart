@@ -43,12 +43,20 @@ class TradeStageHistoryService {
   // public method
   //
 
+  /// 取引ステージ履歴取得
+  ///
+  /// - [tradeId] 取引ID
+  Future<List<TradeStageHistory>> getHistories(String tradeId) async {
+    final conditions = TradeStageHistorySearchConditions(tradeId: tradeId);
+    return await _repository.getByConditions(conditions);
+  }
+
   /// 取引ステージ履歴リスト取得
   ///
   /// 取引ステージ履歴を取引IDで取得できる Map として返却します。
   ///
   /// - [tradeIds] 取引IDリスト
-  Future<Map<String, List<int>>> getHistories(List<String> tradeIds) async {
+  Future<Map<String, List<int>>> getHistoriesById(List<String> tradeIds) async {
     final conditions = TradeStageHistorySearchConditions(tradeIds: tradeIds);
     final histories = await _repository.getByConditions(conditions);
     final historyById = <String, List<int>>{};

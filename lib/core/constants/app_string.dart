@@ -6,4 +6,7 @@ class AppString {
 
   /// アプリ名
   static const appTitle = 'グッズ交換管理';
+
+  /// Xドメイン
+  static const xDomain = 'https://x.com/';
 }

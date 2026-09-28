@@ -39,6 +39,13 @@ class PartnerService {
   // public method
   //
 
+  /// 取引相手取得
+  ///
+  /// - [partnerId] 取引相手ID
+  Future<Partner?> getPartner(String partnerId) {
+    return _repository.getById(partnerId);
+  }
+
   /// 取引相手リスト取得
   ///
   /// 取引相手を ID で取得できる Map として返却します。

@@ -52,7 +52,7 @@ class _TradeListScreenState extends State<TradeListScreen> {
   // public methods
   //
 
-  ///　初期化
+  /// 初期化
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();

@@ -41,19 +41,12 @@ class StoredImageService {
   // public methods
   //
 
-  /// 画像取得
-  ///
-  /// - [imageId] 画像ID
-  Future<StoredImage?> getImage(String imageId) {
-    return _repository.getById(imageId);
-  }
-
   /// 画像リスト取得
   ///
   /// 画像を ID で取得できる Map として返却します。
   ///
   /// - [imageIds] 画像IDリスト
-  Future<Map<String, StoredImage>> getImages(List<String> imageIds) async {
+  Future<Map<String, StoredImage>> getImagesById(List<String> imageIds) async {
     final conditions = StoredImageSearchConditions(imageIds: imageIds);
     final images = await _repository.getByConditions(conditions);
 

@@ -3,8 +3,8 @@ import 'package:trading_management/features/trade/domain/models/delivery_type.da
 import 'package:trading_management/features/trade/domain/models/trade_stage.dart';
 import 'package:trading_management/features/trade/domain/models/trade_type.dart';
 
-/// 取引概要
-class TradeSummary {
+/// 取引詳細
+class TradeDetail {
   //
   // fields
   //
@@ -49,7 +49,7 @@ class TradeSummary {
   // constructor
   //
 
-  const TradeSummary({
+  const TradeDetail({
     required this.tradeId,
     required this.partnerUserId,
     required this.partnerUsername,

@@ -68,7 +68,6 @@ class CommonAppBar extends StatelessWidget implements PreferredSizeWidget {
       elevation: 0,
       scrolledUnderElevation: 0,
       surfaceTintColor: Colors.transparent,
-      automaticallyImplyLeading: false,
     );
   }
 

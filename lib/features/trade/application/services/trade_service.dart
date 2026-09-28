@@ -1,7 +1,9 @@
 import 'package:trading_management/core/data/database/app_database.dart';
+import 'package:trading_management/core/exception/not_found_exception.dart';
 import 'package:trading_management/features/image/application/stored_image_service.dart';
 import 'package:trading_management/features/partner/application/services/partner_service.dart';
 import 'package:trading_management/features/trade/application/mappers/trade_mapper.dart';
+import 'package:trading_management/features/trade/application/models/trade_detail.dart';
 import 'package:trading_management/features/trade/application/models/trade_summary.dart';
 import 'package:trading_management/features/trade/application/services/trade_stage_history_service.dart';
 import 'package:trading_management/features/trade/data/trade/trade_repository.dart';
@@ -78,6 +80,31 @@ class TradeService {
   // public methods
   //
 
+  Future<TradeDetail> getTrade(String tradeId) async {
+    final trade = await _repository.getById(tradeId);
+
+    if (trade == null) {
+      throw NotFoundException(tradeId);
+    }
+
+    final (partner, stage, images) = await (
+      _partnerService.getPartner(trade.partnerId),
+      _stageHistoryService.getHistories(tradeId),
+      _storedImageService.getImagesById([
+        ?trade.offerItemImageId,
+        ?trade.wantedItemImageId,
+      ]),
+    ).wait;
+
+    return TradeMapper.toTradeDetail(
+      trade,
+      partner,
+      images[trade.offerItemImageId],
+      images[trade.wantedItemImageId],
+      stage,
+    );
+  }
+
   /// 取引リスト取得
   ///
   /// - [conditions] 検索条件
@@ -94,8 +121,8 @@ class TradeService {
     // 並列処理で取得
     final (partners, stages, images) = await (
       _partnerService.getPartnersById(partnerIds),
-      _stageHistoryService.getHistories(tradeIds),
-      _storedImageService.getImages(imageIds),
+      _stageHistoryService.getHistoriesById(tradeIds),
+      _storedImageService.getImagesById(imageIds),
     ).wait;
 
     return trades.map((trade) {

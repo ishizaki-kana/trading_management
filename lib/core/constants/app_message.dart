@@ -6,4 +6,7 @@ class AppMessage {
 
   /// 表示するデータがありません。
   static const dataNotFound = '表示するデータがありません。';
+
+  /// リンクを開けませんでした。
+  static const linkOpenFailed = 'リンクを開けませんでした。';
 }

@@ -5,7 +5,6 @@ import 'package:trading_management/core/widgets/display/typography/section_title
 /// セクション
 ///
 /// - [title] タイトル
-/// - [padding]　パディング （デフォルト: `horizontal: AppSpacing.s24`）
 /// - [child] 子要素
 class Section extends StatelessWidget {
   //
@@ -15,9 +14,6 @@ class Section extends StatelessWidget {
   /// タイトル
   final String? title;
 
-  /// パディング
-  final EdgeInsetsGeometry padding;
-
   /// 子要素
   final Widget child;
 
@@ -25,12 +21,7 @@ class Section extends StatelessWidget {
   // constructor
   //
 
-  const Section({
-    super.key,
-    this.title,
-    this.padding = const EdgeInsets.symmetric(horizontal: AppSpacing.s24),
-    required this.child,
-  });
+  const Section({super.key, this.title, required this.child});
 
   //
   // public methods
@@ -38,16 +29,14 @@ class Section extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: padding,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        spacing: AppSpacing.s8,
-        children: [
-          if (title != null) SectionTitle(text: title!),
-          child,
-        ],
-      ),
+    return Column(
+      mainAxisSize: MainAxisSize.max,
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      spacing: AppSpacing.s8,
+      children: [
+        if (title != null) SectionTitle(text: title!),
+        child,
+      ],
     );
   }
 }

@@ -1,4 +1,3 @@
-import 'package:trading_management/features/trade/application/models/trade_summary.dart';
 import 'package:trading_management/features/trade/domain/models/delivery_type.dart';
 import 'package:trading_management/features/trade/domain/models/trade_stage.dart';
 import 'package:trading_management/features/trade/domain/models/trade_type.dart';
@@ -11,16 +10,18 @@ class TradeStageResolver {
   // public methods
   //
 
-  /// 取引ステージ判定
+  /// 取引ステージ取得
   ///
   /// 取引種別と引渡種別から取引ステージの一覧を取得します。
   ///
-  /// - [trade] 取引データ
-  static List<TradeStage> resolve({required TradeSummary trade}) {
-    final tradeType = trade.tradeType;
-    final deliveryType = trade.deliveryType;
-    final isPrepaid = trade.isPrepaid;
-
+  /// - [tradeType] 取引種別
+  /// - [deliveryType] 受渡種別
+  /// - [isPrepaid] 先払いかどうか
+  static List<TradeStage> resolveStates({
+    required TradeType tradeType,
+    required DeliveryType deliveryType,
+    required bool isPrepaid,
+  }) {
     //　手渡し
     if (deliveryType == DeliveryType.handoff) {
       return const [TradeStage.agreed, TradeStage.completed];
@@ -66,5 +67,22 @@ class TradeStageResolver {
                 TradeStage.completed,
               ],
     };
+  }
+
+  /// 次のステージ取得
+  ///
+  /// 取引ステージリストから、未完了の次のステージを返却します。
+  /// すべて完了済みの場合は`null`を返却します。
+  static TradeStage? resolveNextStage({
+    required List<TradeStage> stages,
+    required List<TradeStage> completedStages,
+  }) {
+    for (final stage in stages) {
+      if (!completedStages.contains(stage)) {
+        return stage;
+      }
+    }
+
+    return null;
   }
 }

@@ -43,6 +43,9 @@ dependencies:
   # 画像のキャッシュ
   cached_network_image: ^3.4.1
 
+  # url
+  url_launcher: ^6.3.0
+
   # フラッシュバー
   another_flushbar: ^2.2.4
 

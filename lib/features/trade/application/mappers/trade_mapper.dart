@@ -1,4 +1,5 @@
 import 'package:trading_management/core/data/database/app_database.dart';
+import 'package:trading_management/features/trade/application/models/trade_detail.dart';
 import 'package:trading_management/features/trade/application/models/trade_item.dart';
 import 'package:trading_management/features/trade/application/models/trade_summary.dart';
 import 'package:trading_management/features/trade/domain/models/delivery_type.dart';
@@ -34,6 +35,43 @@ class TradeMapper {
         .toList();
 
     return TradeSummary(
+      tradeId: trade.tradeId,
+      partnerUserId: partner?.userId,
+      partnerUsername: partner?.username,
+      tradeType: TradeType.fromCode(trade.tradeTypeId),
+      deliveryType: DeliveryType.fromCode(trade.deliveryTypeId),
+      offerItem: TradeItem(itemName: trade.offerItem, image: offerItemImage),
+      wantedItem: TradeItem(itemName: trade.wantedItem, image: wantedItemImage),
+      completedStages: completedStages,
+      tradedAt: trade.tradedAt,
+      location: trade.location,
+      isPrepaid: trade.isPrepaid,
+      memo: trade.memo,
+    );
+  }
+
+  /// 取引詳細モデル変換
+  ///
+  /// 取引データを取引詳細モデルへ変換します。
+  ///
+  /// - [trade]　取引データ
+  /// - [partner] 取引相手データ
+  /// - [offerItemImage] 譲渡アイテム画像
+  /// - [wantedItemImage] 希望アイテム画像
+  /// - [stages] 取引ステージ
+  static TradeDetail toTradeDetail(
+    Trade trade,
+    Partner? partner,
+    StoredImage? offerItemImage,
+    StoredImage? wantedItemImage,
+    List<TradeStageHistory> stages,
+  ) {
+    final List<TradeStage> completedStages = stages
+        .map((s) => s.stageCode)
+        .map((s) => TradeStage.fromCode(s))
+        .toList();
+
+    return TradeDetail(
       tradeId: trade.tradeId,
       partnerUserId: partner?.userId,
       partnerUsername: partner?.username,
