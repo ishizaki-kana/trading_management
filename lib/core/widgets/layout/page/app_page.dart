@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:trading_management/core/types/app_feedback.dart';
 import 'package:trading_management/core/widgets/feedback/loading/loading.dart';
 import 'package:trading_management/core/widgets/feedback/message/message.dart';
 
@@ -6,6 +7,7 @@ import 'package:trading_management/core/widgets/feedback/message/message.dart';
 ///
 /// - [appBar] アプリバー
 /// - [body] ボディ
+/// - [bottomNavigationBar] 下部バー
 /// - [message] メッセージ
 /// - [messageIcon] メッセージ画面のアイコン
 /// - [backgroundColor] 背景色
@@ -20,6 +22,9 @@ class AppPage extends StatelessWidget {
 
   /// ボディ
   final Widget body;
+
+  /// 下部バー
+  final Widget? bottomNavigationBar;
 
   /// メッセージ
   final String? message;
@@ -41,6 +46,7 @@ class AppPage extends StatelessWidget {
     super.key,
     required this.appBar,
     required this.body,
+    this.bottomNavigationBar,
     this.message,
     this.messageIcon,
     this.backgroundColor,
@@ -57,7 +63,10 @@ class AppPage extends StatelessWidget {
       // ローディング中
       (true, _) => const Loading(),
       // メッセージ
-      (false, final message?) => Message(message: message, icon: messageIcon),
+      (false, final message?) => Message(
+        message: message,
+        type: AppFeedback.success,
+      ),
       // 正常
       (false, null) => body,
     };
@@ -66,6 +75,7 @@ class AppPage extends StatelessWidget {
       appBar: appBar,
       body: displayBody,
       backgroundColor: backgroundColor,
+      bottomNavigationBar: bottomNavigationBar,
     );
   }
 }

@@ -12,6 +12,7 @@ class AppSpacing {
   //
 
   static const double none = 0;
+  static const double s2 = 2;
   static const double s4 = 4;
   static const double s6 = 6;
   static const double s8 = 8;
@@ -22,6 +23,7 @@ class AppSpacing {
   static const double s32 = 32;
   static const double s40 = 40;
   static const double s48 = 48;
+  static const double s56 = 56;
 
   //
   // レスポンシブ

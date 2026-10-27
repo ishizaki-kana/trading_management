@@ -2,12 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:trading_management/core/constants/app_message.dart';
 import 'package:trading_management/core/data/database/app_database.scope.dart';
 import 'package:trading_management/core/theme/app_spacing.dart';
+import 'package:trading_management/core/widgets/layout/bottom_navigation_bar/app_bottom_navigation_bar.dart';
 import 'package:trading_management/core/widgets/layout/page/app_page.dart';
 import 'package:trading_management/features/trade/application/models/trade_summary.dart';
 import 'package:trading_management/features/trade/application/services/trade_service.dart';
 import 'package:trading_management/features/trade/data/trade/trade_search_conditions.dart';
-import 'package:trading_management/features/trade/presentation/widgets/card/trade_card.dart';
-import 'package:trading_management/features/trade/presentation/widgets/search/search_app_bar.dart';
+import 'package:trading_management/features/trade/presentation/widgets/list/card/trade_card.dart';
+import 'package:trading_management/features/trade/presentation/widgets/list/search/search_app_bar.dart';
 
 /// 取引一覧画面
 class TradeListScreen extends StatefulWidget {
@@ -79,10 +80,14 @@ class _TradeListScreenState extends State<TradeListScreen> {
         ),
         itemCount: _trades.length,
         itemBuilder: (context, index) {
-          return TradeCard(trade: _trades[index]);
+          return TradeCard(
+            trade: _trades[index],
+            onReturned: () => _loadTrades(_conditions),
+          );
         },
         separatorBuilder: (_, _) => const SizedBox(height: AppSpacing.s20),
       ),
+      bottomNavigationBar: const AppBottomNavigationBar(),
     );
   }
 
@@ -107,7 +112,7 @@ class _TradeListScreenState extends State<TradeListScreen> {
     final tradeService = TradeService.fromDatabase(database);
 
     try {
-      final trades = await tradeService.getTrades(conditions);
+      final trades = await tradeService.getByConditions(conditions);
 
       if (!mounted || requestId != _currentRequestId) {
         return;

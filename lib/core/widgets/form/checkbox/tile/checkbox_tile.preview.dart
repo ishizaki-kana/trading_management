@@ -1,14 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:trading_management/core/form/app_form_field.dart';
 import 'package:trading_management/core/preview/app_preview.dart';
-import 'package:trading_management/core/widgets/form/checkbox/checkbox_option.dart';
 import 'package:trading_management/core/widgets/form/checkbox/tile/checkbox_tile.dart';
 
-@AppPreview(group: 'form/checkbox/tile')
+@AppPreview(
+  group: 'form/checkbox/tile',
+  name: 'Interactive',
+  size: Size(360, 160),
+)
 Widget checkboxTilePreview() {
-  var option = const CheckboxOption(
-    value: 'sample',
-    label: 'サンプル項目',
-    checked: false,
+  var field = const AppFormField(
+    id: 'is_prepaid',
+    name: '先払いにする',
+    value: false,
   );
 
   return Scaffold(
@@ -17,10 +21,10 @@ Widget checkboxTilePreview() {
       child: StatefulBuilder(
         builder: (context, setState) {
           return CheckboxTile(
-            option: option,
-            onChanged: (newOption) {
+            field,
+            onChanged: (value) {
               setState(() {
-                option = newOption;
+                field = field.copyWith(value: value);
               });
             },
           );

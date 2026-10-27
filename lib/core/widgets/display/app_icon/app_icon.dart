@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:trading_management/core/theme/app_color.dart';
 import 'package:trading_management/core/theme/app_icon_size.dart';
 import 'package:trading_management/core/theme/app_radius.dart';
 import 'package:trading_management/core/theme/app_spacing.dart';
@@ -30,7 +31,7 @@ class AppIcon extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(AppSpacing.s4),
       decoration: BoxDecoration(
-        color: theme.colorScheme.primary,
+        color: AppColor.primary,
         borderRadius: AppRadius.sm,
       ),
       child: Icon(

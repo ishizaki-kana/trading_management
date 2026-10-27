@@ -6,7 +6,5 @@ const _group = 'display/typography/subheading';
 
 @AppPreview(group: _group)
 Widget preview() {
-  return const Scaffold(
-    body: Center(child: Subheading(text: 'text')),
-  );
+  return const Scaffold(body: Center(child: Subheading('text')));
 }

@@ -7,6 +7,6 @@ const _group = 'display/typography/caption';
 @AppPreview(group: _group)
 Widget preview() {
   return const Scaffold(
-    body: Center(child: Caption(text: 'text')),
+    body: Center(child: Caption('text')),
   );
 }

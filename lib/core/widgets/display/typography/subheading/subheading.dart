@@ -19,7 +19,7 @@ class Subheading extends StatelessWidget {
   // constructor
   //
 
-  const Subheading({super.key, required this.text, this.maxLines = 1});
+  const Subheading(this.text, {super.key, this.maxLines = 1});
 
   //
   // public methods

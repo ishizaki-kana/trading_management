@@ -37,4 +37,23 @@ class PartnerRepository
 
     return query.get();
   }
+
+  @override
+  Future<void> insert(Partner entity) async {
+    await database.into(database.partners).insert(entity);
+  }
+
+  @override
+  Future<bool> update(Partner entity) {
+    return database.update(database.partners).replace(entity);
+  }
+
+  @override
+  Future<bool> delete(String id) async {
+    final count = await (database.delete(
+      database.partners,
+    )..where((partner) => partner.partnerId.equals(id))).go();
+
+    return count == 1;
+  }
 }

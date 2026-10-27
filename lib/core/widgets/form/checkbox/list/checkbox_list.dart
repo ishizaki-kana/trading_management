@@ -1,62 +1,90 @@
 import 'package:flutter/material.dart';
-import 'package:trading_management/core/theme/app_spacing.dart';
+import 'package:trading_management/core/form/app_form_field.dart';
+import 'package:trading_management/core/widgets/display/typography/label/label.dart';
 import 'package:trading_management/core/widgets/form/checkbox/checkbox_option.dart';
 import 'package:trading_management/core/widgets/form/checkbox/tile/checkbox_tile.dart';
 
-/// チェックボックスリスト
+/// チェックリスト
 ///
-/// チェックボックスを縦に並べて表示します。
-///
-/// - [options] 項目リスト
-/// - [onChanged] 更新後の項目を通知するコールバック
-class CheckboxList extends StatelessWidget {
-  //
-  // fields
-  //
+/// - [field] フィールド
+/// - [options] 選択肢リスト
+/// - [showLabel] フィールド名を表示するかどうか
+/// - [onChanged] 選択値が変わったときのコールバック
+/// - [onSaved] 入力値保存時のコールバック
+class CheckboxList<T> extends StatelessWidget {
+  /// フィールド
+  final AppFormField<List<T>> field;
 
-  /// 項目リスト
-  final List<CheckboxOption> options;
+  /// 選択肢リスト
+  final List<CheckboxOption<T>> options;
 
-  /// 更新後の項目を通知するコールバック
-  final ValueChanged<List<CheckboxOption>>? onChanged;
+  /// フィールド名を表示するかどうか
+  final bool showLabel;
 
-  //
-  // constructor
-  //
+  /// 選択値が変わったときのコールバック
+  final ValueChanged<List<T>>? onChanged;
 
-  const CheckboxList({super.key, required this.options, this.onChanged});
+  /// 入力値保存時のコールバック
+  final FormFieldSetter<List<T>>? onSaved;
 
-  //
-  // public methods
-  //
+  const CheckboxList(
+    this.field, {
+    super.key,
+    required this.options,
+    this.showLabel = true,
+    this.onChanged,
+    this.onSaved,
+  });
 
   @override
   Widget build(BuildContext context) {
     return Column(
-      spacing: AppSpacing.s4,
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        for (final option in options)
-          CheckboxTile(
-            option: option,
-            onChanged: onChanged == null
-                ? null
-                : (target) => onChanged!.call(_replace(target)),
-          ),
+        if (showLabel) Label(field.name, isRequired: field.isRequired),
+        FormField<List<T>>(
+          key: ValueKey(field.id),
+          initialValue: List<T>.of(field.value),
+          onSaved: onSaved,
+          builder: (state) {
+            final selected = state.value ?? const [];
+
+            return Column(
+              children: [
+                for (final (index, option) in options.indexed)
+                  CheckboxTile(
+                    AppFormField<bool>(
+                      id: '${field.id}[$index]',
+                      name: option.label,
+                      value: selected.contains(option.value),
+                    ),
+                    key: ValueKey(option.value),
+                    onChanged: onChanged == null
+                        ? null
+                        : (_) => _toggle(state, option.value),
+                  ),
+              ],
+            );
+          },
+        ),
       ],
     );
   }
 
-  //
-  // private methods
-  //
-
-  /// 項目リスト更新
+  ///　チェック状態切り替え
   ///
-  /// - [target] 更新対象の項目
-  List<CheckboxOption> _replace(CheckboxOption target) {
-    return [
-      for (final option in options)
-        option.value == target.value ? target : option,
-    ];
+  /// - [state] フォーム状態
+  /// - [value] チェック状態
+  void _toggle(FormFieldState<List<T>> state, T value) {
+    final currentValues = state.value ?? <T>[];
+
+    // チェック状態が true のとき、リストから削除
+    // false のとき、リストへ追加
+    final updatedValues = currentValues.contains(value)
+        ? currentValues.where((item) => item != value).toList()
+        : [...currentValues, value];
+
+    state.didChange(updatedValues);
+    onChanged?.call(updatedValues);
   }
 }

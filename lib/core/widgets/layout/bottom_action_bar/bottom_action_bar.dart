@@ -1,27 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:trading_management/core/theme/app_spacing.dart';
 import 'package:trading_management/core/widgets/form/button/app_button.dart';
+import 'package:trading_management/core/widgets/form/button/app_button_config.dart';
 
 /// 底部アクションバー
 ///
-/// - [buttonText] ボタンテキスト
-/// - [onPressed] タップ時のコールバック
+/// - [config] ボタンコンフィグ
 class BottomActionBar extends StatelessWidget {
   //
   // fields
   //
 
-  /// ボタンテキスト
-  final String buttonText;
-
-  /// タップ時のコールバック
-  final VoidCallback? onPressed;
+  /// ボタンコンフィグ
+  final AppButtonConfig config;
 
   //
   // constructor
   //
 
-  const BottomActionBar({super.key, required this.buttonText, this.onPressed});
+  const BottomActionBar({super.key, required this.config});
 
   //
   // public methods
@@ -38,22 +35,14 @@ class BottomActionBar extends StatelessWidget {
           horizontal: AppSpacing.s16,
           vertical: AppSpacing.s8,
         ),
-        decoration: BoxDecoration(
-          color: theme.colorScheme.surface,
-          boxShadow: [
-            BoxShadow(
-              color: theme.colorScheme.shadow.withValues(alpha: 0.12),
-              blurRadius: 4,
-              offset: const Offset(0, -2),
-            ),
-          ],
-        ),
+        decoration: BoxDecoration(color: theme.colorScheme.surfaceContainerLow),
         child: SizedBox(
           width: double.infinity,
           child: AppButton(
-            onPressed: onPressed,
+            onPressed: config.onPressed,
+            text: config.text ?? '',
+            isLoading: config.isLoading ?? false,
             padding: const EdgeInsets.symmetric(vertical: AppSpacing.s16),
-            text: buttonText,
           ),
         ),
       ),

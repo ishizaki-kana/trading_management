@@ -1,10 +1,9 @@
 import 'package:another_flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:trading_management/core/theme/app_duration.dart';
-import 'package:trading_management/core/theme/app_feedback_color.dart';
 import 'package:trading_management/core/theme/app_radius.dart';
 import 'package:trading_management/core/theme/app_spacing.dart';
-import 'package:trading_management/core/types/feedback_type.dart';
+import 'package:trading_management/core/types/app_feedback.dart';
 
 /// フラッシュバー
 ///
@@ -23,39 +22,9 @@ class AppFlushbar {
   /// - [message] メッセージ
   static Future<void> show(
     BuildContext context, {
-    required FeedbackType type,
+    required AppFeedback type,
     required String message,
   }) {
-    final theme = Theme.of(context);
-    final feedbackColors = theme.extension<AppFeedbackColor>()!;
-
-    final (icon, iconColor, backgroundColor, messageColor) = switch (type) {
-      FeedbackType.success => (
-        Icons.check_circle_outline,
-        feedbackColors.success,
-        feedbackColors.successContainer,
-        feedbackColors.onSuccessContainer,
-      ),
-      FeedbackType.info => (
-        Icons.info_outline,
-        feedbackColors.info,
-        feedbackColors.infoContainer,
-        feedbackColors.onInfoContainer,
-      ),
-      FeedbackType.warning => (
-        Icons.warning_amber_outlined,
-        feedbackColors.warning,
-        feedbackColors.warningContainer,
-        feedbackColors.onWarningContainer,
-      ),
-      FeedbackType.error => (
-        Icons.error_outline,
-        theme.colorScheme.error,
-        theme.colorScheme.errorContainer,
-        theme.colorScheme.onErrorContainer,
-      ),
-    };
-
     return Flushbar(
       message: message,
       flushbarStyle: FlushbarStyle.FLOATING,
@@ -66,9 +35,9 @@ class AppFlushbar {
       ),
       borderRadius: AppRadius.md,
       duration: AppDuration.notification,
-      icon: Icon(icon, color: iconColor),
-      backgroundColor: backgroundColor,
-      messageColor: messageColor,
+      icon: Icon(type.icon, color: type.textColor(context)),
+      backgroundColor: type.containerColor(context),
+      messageColor: type.textColor(context),
     ).show(context);
   }
 }

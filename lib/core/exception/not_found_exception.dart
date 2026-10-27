@@ -6,6 +6,9 @@ class NotFoundException implements Exception {
   // fields
   //
 
+  /// 例外対象名
+  final String targetName;
+
   /// 例外対象
   final Object target;
 
@@ -13,7 +16,7 @@ class NotFoundException implements Exception {
   // constructor
   //
 
-  const NotFoundException(this.target);
+  const NotFoundException(this.targetName, this.target);
 
   //
   // getter
@@ -21,7 +24,7 @@ class NotFoundException implements Exception {
 
   /// メッセージ取得
   ///
-  /// 表示するデータがありません。
+  /// 対象のデータが見つかりません。
   String get message => AppMessage.dataNotFound;
 
   //
@@ -30,6 +33,6 @@ class NotFoundException implements Exception {
 
   @override
   String toString() {
-    return 'NotFoundException: $message (target: $target)';
+    return '$message ($targetName: $target)';
   }
 }

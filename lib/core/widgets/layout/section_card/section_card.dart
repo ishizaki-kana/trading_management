@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:trading_management/core/theme/app_radius.dart';
 import 'package:trading_management/core/theme/app_spacing.dart';
-import 'package:trading_management/core/widgets/display/typography/section_title/section_title.dart';
+import 'package:trading_management/core/widgets/display/typography/label/label.dart';
 
 /// セクションカード
 ///
@@ -66,15 +66,14 @@ class SectionCard extends StatelessWidget {
           borderRadius: AppRadius.sm,
           child: Padding(
             padding: const EdgeInsets.only(
-              top: AppSpacing.s12,
+              top: AppSpacing.s6,
               bottom: AppSpacing.s16,
-              right: AppSpacing.s16,
-              left: AppSpacing.s16,
+              right: AppSpacing.s12,
+              left: AppSpacing.s12,
             ),
             child: Column(
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
-              spacing: AppSpacing.s8,
               children: [
                 if (title != null || leading != null)
                   Row(
@@ -82,7 +81,7 @@ class SectionCard extends StatelessWidget {
                     children: [
                       ?leading,
                       if (title != null)
-                        Expanded(child: SectionTitle(text: title!)),
+                        Expanded(child: Label(title!, isVariant: true)),
                     ],
                   ),
                 child,

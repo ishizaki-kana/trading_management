@@ -19,12 +19,16 @@ class AppColor {
   static const Color lightSurface = Color(0xFFFFFFFF);
   static const Color darkSurface = Color(0xFF1E1E1E);
 
+  // 下部バー・控えめなカードなどより控えめに区別する面
+  static const Color lightSurfaceContainerLow = Color(0xFFebebeb);
+  static const Color darkSurfaceContainerLow = Color(0xFF414141);
+
   // セクションや入力エリアなど、面の中の区切り
   static const Color lightSurfaceContainer = Color(0xFFFFFFFF);
   static const Color darkSurfaceContainer = Color(0xffe3f6f5);
 
   // 通常画面の主要な文字・アイコン
-  static const Color lightOnSurface = Color(0xFF333333);
+  static const Color lightOnSurface = Color(0xFF444444);
   static const Color darkOnSurface = Color(0xFFE6E0E9);
 
   // 補足説明やプレースホルダーなどの薄い文字
@@ -39,7 +43,8 @@ class AppColor {
   static const Color darkOutline = Color(0xFF555555);
 
   // カードやコンテナの影
-  static const Color shadow = Color(0x1A000000);
+  static const Color lightShadow = Color(0x1A000000);
+  static const Color darkShadow = Color(0x14FFFFFF);
 
   // 状態表示
   static const Color success = Color(0xff43A047);
@@ -49,6 +54,7 @@ class AppColor {
 
   // 汎用
   static const Color white = Color(0xffffffff);
+  static const Color black = Color(0x33333333);
   static const Color lightGrey = Color(0xffEEEEEE);
   static const Color grey = Color(0xff757575);
   static const Color yellow = Color(0xFFf6d787);

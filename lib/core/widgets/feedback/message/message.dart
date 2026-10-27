@@ -1,29 +1,30 @@
 import 'package:flutter/material.dart';
 import 'package:trading_management/core/theme/app_icon_size.dart';
 import 'package:trading_management/core/theme/app_spacing.dart';
+import 'package:trading_management/core/types/app_feedback.dart';
 
 /// メッセージ画面
 ///
 /// メッセージとアイコンを画面中央に表示します。
 ///
+/// - [type] フィードバックタイプ
 /// - [message] メッセージ
-/// - [icon] アイコン
 class Message extends StatelessWidget {
   //
   // fields
   //
 
+  /// フィードバックタイプ
+  final AppFeedback type;
+
   /// メッセージ
   final String message;
-
-  /// アイコン
-  final IconData? icon;
 
   //
   // constructor
   //
 
-  const Message({super.key, required this.message, this.icon});
+  const Message({super.key, required this.type, required this.message});
 
   //
   // public methods
@@ -34,17 +35,16 @@ class Message extends StatelessWidget {
     final theme = Theme.of(context);
 
     return Center(
-      child: Column(
+      child: Row(
         mainAxisSize: MainAxisSize.min,
         mainAxisAlignment: MainAxisAlignment.center,
-        spacing: AppSpacing.s12,
+        spacing: AppSpacing.s8,
         children: [
-          if (icon != null)
-            Icon(
-              icon,
-              size: AppIconSize.xxl,
-              color: theme.colorScheme.onSurfaceVariant,
-            ),
+          Icon(
+            type.icon,
+            size: AppIconSize.lg,
+            color: theme.colorScheme.onSurfaceVariant,
+          ),
           Text(
             message,
             textAlign: TextAlign.center,

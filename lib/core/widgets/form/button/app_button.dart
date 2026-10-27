@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:trading_management/core/theme/app_icon_size.dart';
-import 'package:trading_management/core/theme/app_spacing.dart';
+import 'package:trading_management/core/widgets/feedback/loading/loading.dart';
 
 /// ボタン
 ///
@@ -48,13 +48,6 @@ class AppButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final padding =
-        this.padding ??
-        const EdgeInsets.symmetric(
-          horizontal: AppSpacing.s24,
-          vertical: AppSpacing.s20,
-        );
-
     return SizedBox(
       width: isFullWidth ? double.infinity : null,
       child: ElevatedButton(
@@ -64,7 +57,7 @@ class AppButton extends StatelessWidget {
             ? const SizedBox(
                 width: AppIconSize.sm,
                 height: AppIconSize.sm,
-                child: CircularProgressIndicator(strokeWidth: 2),
+                child: Loading(size: AppIconSize.xs),
               )
             : Text(text),
       ),

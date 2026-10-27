@@ -59,7 +59,7 @@ class CommonAppBar extends StatelessWidget implements PreferredSizeWidget {
 
     return AppBar(
       leading: _buildLeading(context),
-      title: title == null ? null : Heading(text: title!),
+      title: title == null ? null : Heading(title!),
       titleSpacing: AppSpacing.s8,
       centerTitle: isCenterTitle,
       actions: actions,

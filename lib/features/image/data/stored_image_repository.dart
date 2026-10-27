@@ -23,6 +23,11 @@ class StoredImageRepository
     return query.getSingleOrNull();
   }
 
+  /// 画像を登録または更新します。
+  Future<void> upsert(StoredImagesCompanion image) async {
+    await database.into(database.storedImages).insertOnConflictUpdate(image);
+  }
+
   @override
   Future<List<StoredImage>> getByConditions(
     StoredImageSearchConditions conditions,

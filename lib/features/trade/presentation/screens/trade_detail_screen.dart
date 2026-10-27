@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:trading_management/core/data/database/app_database.scope.dart';
 import 'package:trading_management/core/theme/app_spacing.dart';
+import 'package:trading_management/core/widgets/form/button/app_button_config.dart';
 import 'package:trading_management/core/widgets/layout/bottom_action_bar/bottom_action_bar.dart';
 import 'package:trading_management/core/widgets/layout/page/app_page.dart';
 import 'package:trading_management/core/widgets/navigation/app_bars/common/common_app_bar.dart';
@@ -8,7 +9,8 @@ import 'package:trading_management/features/trade/application/models/trade_detai
 import 'package:trading_management/features/trade/application/services/trade_service.dart';
 import 'package:trading_management/features/trade/domain/models/trade_stage.dart';
 import 'package:trading_management/features/trade/domain/resolvers/trade_stage_resolver.dart';
-import 'package:trading_management/features/trade/presentation/widgets/detail/trade_detail_info.dart';
+import 'package:trading_management/features/trade/presentation/widgets/detail/info/trade_detail_info.dart';
+import 'package:trading_management/features/trade/presentation/widgets/detail/menu/detail_menu_button.dart';
 
 /// 取引詳細画面
 ///
@@ -73,38 +75,14 @@ class _TradeDetailScreenState extends State<TradeDetailScreen> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final trade = _trade!;
-
-    // 取引ステージリスト
-    final stages = TradeStageResolver.resolveStates(
-      tradeType: trade.tradeType,
-      deliveryType: trade.deliveryType,
-      isPrepaid: trade.isPrepaid,
-    );
 
     return AppPage(
-      appBar: CommonAppBar(),
+      appBar: _buildAppBar(),
       backgroundColor: theme.colorScheme.surface,
       message: _message?.message,
       messageIcon: _message?.icon,
       isLoading: _isLoading,
-      body: Column(
-        mainAxisSize: MainAxisSize.max,
-        children: [
-          Expanded(
-            child: SingleChildScrollView(
-              child: Padding(
-                padding: EdgeInsets.symmetric(
-                  horizontal: AppSpacing.pageHorizontal(context),
-                  vertical: AppSpacing.pageVertical(context),
-                ),
-                child: TradeDetailInfo(trade: trade, stages: stages),
-              ),
-            ),
-          ),
-          _buildNextStageButton(trade, stages),
-        ],
-      ),
+      body: _buildBody(),
     );
   }
 
@@ -125,7 +103,7 @@ class _TradeDetailScreenState extends State<TradeDetailScreen> {
     final tradeService = TradeService.fromDatabase(database);
 
     try {
-      final trade = await tradeService.getTrade(widget.tradeId);
+      final trade = await tradeService.getById(widget.tradeId);
 
       if (!mounted) {
         return;
@@ -147,20 +125,67 @@ class _TradeDetailScreenState extends State<TradeDetailScreen> {
     }
   }
 
-  Widget _buildNextStageButton(TradeDetail trade, List<TradeStage> stages) {
+  // アプリバー作成
+  PreferredSizeWidget _buildAppBar() {
+    return CommonAppBar(
+      actions: [DetailMenuButton(trade: _trade, onUpdated: _loadTrade)],
+    );
+  }
+
+  // ボディ作成
+  Widget _buildBody() {
+    if (_trade != null) {
+      final trade = _trade!;
+      final stages = TradeStageResolver.resolveStates(
+        tradeType: trade.tradeType,
+        deliveryType: trade.deliveryType,
+        isPrepaid: trade.isPrepaid,
+      );
+
+      return Column(
+        mainAxisSize: MainAxisSize.max,
+        children: [
+          Expanded(
+            child: SingleChildScrollView(
+              child: Padding(
+                padding: EdgeInsets.symmetric(
+                  horizontal: AppSpacing.pageHorizontal(context),
+                  vertical: AppSpacing.pageVertical(context),
+                ),
+                child: TradeDetailInfo(trade: trade, stages: stages),
+              ),
+            ),
+          ),
+          _buildNextStageButton(stages),
+        ],
+      );
+    } else {
+      return const SizedBox.shrink();
+    }
+  }
+
+  /// 取引ステージ進行ボタン作成
+  ///
+  /// - [stages] 取引ステージリスト
+  Widget _buildNextStageButton(List<TradeStage> stages) {
+    final trade = _trade!;
     final nextStage = TradeStageResolver.resolveNextStage(
       stages: stages,
       completedStages: trade.completedStages,
     );
 
+    final AppButtonConfig buttonConfig;
+
     // 取引終了済みのとき、ボタン操作不可
     if (nextStage == null) {
-      return BottomActionBar(buttonText: '取引終了済');
+      buttonConfig = AppButtonConfig(text: '取引終了済');
+    } else {
+      buttonConfig = AppButtonConfig(
+        text: '${nextStage.label} にする',
+        onPressed: () {},
+      );
     }
 
-    return BottomActionBar(
-      buttonText: '${nextStage.label} にする',
-      onPressed: () {},
-    );
+    return BottomActionBar(config: buttonConfig);
   }
 }

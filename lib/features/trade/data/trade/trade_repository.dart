@@ -59,4 +59,9 @@ class TradeRepository
 
     return query.get();
   }
+
+  @override
+  Future<bool> update(Trade entity) async {
+    return database.update(database.trades).replace(entity);
+  }
 }

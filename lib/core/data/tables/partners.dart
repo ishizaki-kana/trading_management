@@ -21,5 +21,5 @@ class Partners extends Table {
   //
 
   @override
-  Set<Column<Object>> get primaryKey => {partnerId, userId, username};
+  Set<Column<Object>> get primaryKey => {partnerId};
 }

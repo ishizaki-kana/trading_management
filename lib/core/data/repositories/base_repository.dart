@@ -61,14 +61,14 @@ abstract class BaseRepository<
   /// エンティティ更新
   ///
   /// - [entity] 更新するエンティティ
-  Future<void> update(T entity) {
+  Future<bool> update(T entity) {
     throw UnimplementedError('update is not implemented');
   }
 
   /// エンティティ削除
   ///
   /// - [id] 削除するエンティティのID
-  Future<void> delete(Id id) {
+  Future<bool> delete(Id id) {
     throw UnimplementedError('delete is not implemented');
   }
 

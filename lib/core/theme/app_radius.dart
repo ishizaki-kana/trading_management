@@ -6,23 +6,24 @@ import 'package:flutter/material.dart';
 class AppRadius {
   AppRadius._();
 
-  static const double r4 = 4;
-  static const double r8 = 8;
-  static const double r12 = 12;
-  static const double r16 = 16;
+  static const Radius r4 = Radius.circular(4);
+  static const Radius r8 = Radius.circular(8);
+  static const Radius r12 = Radius.circular(12);
+  static const Radius r16 = Radius.circular(16);
+  static const Radius r999 = Radius.circular(999);
 
-  /// 角丸 `4px`
-  static const BorderRadius xs = BorderRadius.all(Radius.circular(r4));
+  /// 角丸（全て） `4px`
+  static const BorderRadius xs = BorderRadius.all(r4);
 
-  /// 角丸 `8px`
-  static const BorderRadius sm = BorderRadius.all(Radius.circular(r8));
+  /// 角丸（全て） `8px`
+  static const BorderRadius sm = BorderRadius.all(r8);
 
-  /// 角丸 `12px`
-  static const BorderRadius md = BorderRadius.all(Radius.circular(r12));
+  /// 角丸（全て） `12px`
+  static const BorderRadius md = BorderRadius.all(r12);
 
-  /// 角丸 `16px`
-  static const BorderRadius lg = BorderRadius.all(Radius.circular(r16));
+  /// 角丸（全て） `16px`
+  static const BorderRadius lg = BorderRadius.all(r16);
 
   /// 円形の角丸
-  static const BorderRadius circle = BorderRadius.all(Radius.circular(999));
+  static const BorderRadius circle = BorderRadius.all(r999);
 }

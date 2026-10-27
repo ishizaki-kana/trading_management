@@ -40,6 +40,15 @@ dependencies:
   # 日時
   intl: ^0.20.2
 
+  # UUID
+  uuid: ^4.6.0
+
+  # 画像ピッカー
+  image_picker: ^1.2.4
+
+  # 画像切り抜き
+  crop_your_image: ^2.0.1
+
   # 画像のキャッシュ
   cached_network_image: ^3.4.1
 

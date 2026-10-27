@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:trading_management/core/theme/app_spacing.dart';
-import 'package:trading_management/core/widgets/display/typography/section_title/section_title.dart';
+import 'package:trading_management/core/widgets/display/typography/label/label.dart';
 
 /// セクション
 ///
 /// - [title] タイトル
-/// - [child] 子要素
+/// - [children] 子要素
 class Section extends StatelessWidget {
   //
   // fields
@@ -15,13 +15,13 @@ class Section extends StatelessWidget {
   final String? title;
 
   /// 子要素
-  final Widget child;
+  final List<Widget> children;
 
   //
   // constructor
   //
 
-  const Section({super.key, this.title, required this.child});
+  const Section({super.key, this.title, required this.children});
 
   //
   // public methods
@@ -31,11 +31,14 @@ class Section extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       mainAxisSize: MainAxisSize.max,
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      spacing: AppSpacing.s8,
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        if (title != null) SectionTitle(text: title!),
-        child,
+        if (title != null) Label(title!),
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          spacing: AppSpacing.s8,
+          children: children,
+        ),
       ],
     );
   }

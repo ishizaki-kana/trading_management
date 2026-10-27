@@ -23,9 +23,9 @@ class Heading extends StatelessWidget {
   // constructor
   //
 
-  const Heading({
+  const Heading(
+    this.text, {
     super.key,
-    required this.text,
     this.textAlign = TextAlign.start,
     this.maxLines = 1,
   });

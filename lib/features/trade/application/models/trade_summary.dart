@@ -1,3 +1,4 @@
+import 'package:trading_management/features/partner/application/models/partner_summary.dart';
 import 'package:trading_management/features/trade/application/models/trade_item.dart';
 import 'package:trading_management/features/trade/domain/models/delivery_type.dart';
 import 'package:trading_management/features/trade/domain/models/trade_stage.dart';
@@ -12,11 +13,8 @@ class TradeSummary {
   /// 取引ID
   final String tradeId;
 
-  /// 取引相手のユーザーID
-  final String? partnerUserId;
-
-  /// 取引相手のユーザー名
-  final String? partnerUsername;
+  /// 取引相手
+  final PartnerSummary? partner;
 
   /// 取引種別
   final TradeType tradeType;
@@ -51,9 +49,8 @@ class TradeSummary {
 
   const TradeSummary({
     required this.tradeId,
-    required this.partnerUserId,
-    required this.partnerUsername,
     required this.tradeType,
+    required this.partner,
     required this.deliveryType,
     required this.offerItem,
     required this.wantedItem,

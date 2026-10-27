@@ -1123,7 +1123,7 @@ class $PartnersTable extends Partners with TableInfo<$PartnersTable, Partner> {
   }
 
   @override
-  Set<GeneratedColumn> get $primaryKey => {partnerId, userId, username};
+  Set<GeneratedColumn> get $primaryKey => {partnerId};
   @override
   Partner map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';

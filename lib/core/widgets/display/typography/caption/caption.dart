@@ -15,7 +15,7 @@ class Caption extends StatelessWidget {
   // constructor
   //
 
-  const Caption({super.key, required this.text});
+  const Caption(this.text, {super.key});
 
   //
   // public methods
