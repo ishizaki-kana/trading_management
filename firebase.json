@@ -1,0 +1,45 @@
+{
+  "flutter": {
+    "platforms": {
+      "android": {
+        "default": {
+          "projectId": "trading-management-13b17",
+          "appId": "1:847323431526:android:8b0f91be3abac65f7ca3a7",
+          "fileOutput": "android/app/google-services.json"
+        }
+      },
+      "ios": {
+        "default": {
+          "projectId": "trading-management-13b17",
+          "appId": "1:847323431526:ios:5adcbd026ddd503c7ca3a7",
+          "uploadDebugSymbols": true,
+          "fileOutput": "ios/Runner/GoogleService-Info.plist"
+        }
+      },
+      "dart": {
+        "lib/firebase_options.dart": {
+          "projectId": "trading-management-13b17",
+          "configurations": {
+            "android": "1:847323431526:android:8b0f91be3abac65f7ca3a7",
+            "ios": "1:847323431526:ios:5adcbd026ddd503c7ca3a7",
+            "web": "1:847323431526:web:7a2be3f2e989d9ea7ca3a7"
+          }
+        }
+      }
+    }
+  },
+  "hosting": {
+    "public": "build/web",
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**"
+    ],
+    "rewrites": [
+      {
+        "source": "**",
+        "destination": "/index.html"
+      }
+    ]
+  }
+}
