@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:trading_management/core/constants/app_message.dart';
+import 'package:trading_management/core/presentation/error/app_message.dart';
 import 'package:trading_management/core/theme/app_icon_size.dart';
 import 'package:trading_management/core/theme/app_spacing.dart';
 import 'package:url_launcher/url_launcher.dart';

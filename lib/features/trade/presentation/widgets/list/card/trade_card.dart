@@ -1,17 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:trading_management/core/navigation/app_navigator.dart';
 import 'package:trading_management/core/theme/app_spacing.dart';
-import 'package:trading_management/core/widgets/form/button/app_button.dart';
 import 'package:trading_management/core/widgets/layout/section_card/section_card.dart';
 import 'package:trading_management/features/trade/application/models/trade_summary.dart';
-import 'package:trading_management/features/trade/domain/conditions/trade_display_conditions.dart';
-import 'package:trading_management/features/trade/domain/models/trade_stage.dart';
 import 'package:trading_management/features/trade/domain/resolvers/trade_stage_resolver.dart';
-import 'package:trading_management/features/trade/presentation/formatter/trade_formatter.dart';
 import 'package:trading_management/features/trade/presentation/screens/trade_detail_screen.dart';
-import 'package:trading_management/features/trade/presentation/widgets/common/info/stage_indicator/trade_stage_indicator.dart';
-import 'package:trading_management/features/trade/presentation/widgets/common/info/trade_chip/trade_chip.dart';
-import 'package:trading_management/features/trade/presentation/widgets/common/info/trade_target/trade_target.dart';
+import 'package:trading_management/features/trade/presentation/widgets/common/info/date_location_info/trade_date_location_info.dart';
+import 'package:trading_management/features/trade/presentation/widgets/common/info/memo/trade_memo.dart';
+import 'package:trading_management/features/trade/presentation/widgets/common/next_stage_button/trade_next_stage_button.dart';
+import 'package:trading_management/features/trade/presentation/widgets/common/stage_indicator/trade_stage_indicator.dart';
+import 'package:trading_management/features/trade/presentation/widgets/common/trade_chip/trade_chip.dart';
+import 'package:trading_management/features/trade/presentation/widgets/common/trade_target/trade_target.dart';
 
 /// 取引カード
 ///
@@ -20,6 +19,7 @@ import 'package:trading_management/features/trade/presentation/widgets/common/in
 ///
 /// - [trade] 取引データ
 /// - [onReturned] 詳細画面から戻ったときのコールバック
+/// - [onUpdated] ステージ更新時のコールバック
 class TradeCard extends StatelessWidget {
   //
   // fields
@@ -31,11 +31,19 @@ class TradeCard extends StatelessWidget {
   /// 詳細画面から戻ったときのコールバック
   final Future<void> Function()? onReturned;
 
+  /// ステージ更新時のコールバック
+  final Future<void> Function()? onUpdated;
+
   //
   // constructor
   //
 
-  const TradeCard({super.key, required this.trade, this.onReturned});
+  const TradeCard({
+    super.key,
+    required this.trade,
+    this.onReturned,
+    this.onUpdated,
+  });
 
   //
   // public methods
@@ -95,76 +103,25 @@ class TradeCard extends StatelessWidget {
               children: [
                 const SizedBox(height: AppSpacing.s4),
                 // 取引日時・場所
-                _buildDateLocationCard(theme),
+                TradeDateLocationInfo(
+                  deliveryType: trade.deliveryType,
+                  tradedAt: trade.tradedAt,
+                  location: trade.location,
+                ),
                 // メモ
-                _buildMemoCard(theme),
+                TradeMemo(memo: trade.memo),
               ],
             ),
             // 取引ステージ進行ボタン
-            _buildNextStageButton(stages),
+            TradeNextStageButton(
+              tradeId: trade.tradeId,
+              stages: stages,
+              completedStages: trade.completedStages,
+              onUpdate: onUpdated ?? onReturned,
+            ),
           ],
         ),
       ),
-    );
-  }
-
-  //
-  // private methods
-  //
-
-  /// 取引日時・場所カード作成
-  ///
-  /// - [theme] テーマ
-  Widget _buildDateLocationCard(ThemeData theme) {
-    final deliveryType = trade.deliveryType;
-    final tradedAt = trade.tradedAt;
-    final location = trade.location;
-
-    if (TradeDisplayConditions.shouldDisplayLocation(
-      deliveryType: deliveryType,
-      tradedAt: tradedAt,
-      location: location,
-    )) {
-      final dateLocation = TradeFormatter.formatDateLocation(
-        tradedAt: tradedAt,
-        location: location,
-      );
-
-      return SectionCard(title: '取引日時 / 場所', child: Text(dateLocation));
-    } else {
-      return const SizedBox.shrink();
-    }
-  }
-
-  /// メモカード作成
-  ///
-  /// - [theme] テーマ
-  Widget _buildMemoCard(ThemeData theme) {
-    if (TradeDisplayConditions.shouldDisplayMemo(memo: trade.memo)) {
-      return SectionCard(title: 'メモ', child: Text(trade.memo!));
-    } else {
-      return const SizedBox.shrink();
-    }
-  }
-
-  /// 取引ステージ進行ボタン作成
-  ///
-  /// - [stages] 取引ステージリスト
-  Widget _buildNextStageButton(List<TradeStage> stages) {
-    final nextStage = TradeStageResolver.resolveNextStage(
-      stages: stages,
-      completedStages: trade.completedStages,
-    );
-
-    /// 取引終了済みのとき、ボタンを表示しない
-    if (nextStage == null) {
-      return const SizedBox.shrink();
-    }
-
-    return AppButton(
-      text: '${nextStage.label} にする',
-      isFullWidth: true,
-      onPressed: () {},
     );
   }
 }

@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 
 /// 状態種別ごとの表示色を定義するテーマ拡張
 ///
-/// `Theme.of(context).extension<AppFeedbackColor>()` を通じて取得します。
-class AppFeedbackColor extends ThemeExtension<AppFeedbackColor> {
+/// `Theme.of(context).extension<AppFeedbackTypeColor>()` を通じて取得します。
+class AppFeedbackTypeColor extends ThemeExtension<AppFeedbackTypeColor> {
   //
   // fields
   //
@@ -30,7 +30,7 @@ class AppFeedbackColor extends ThemeExtension<AppFeedbackColor> {
   // constructor
   //
 
-  const AppFeedbackColor({
+  const AppFeedbackTypeColor({
     required this.success,
     required this.successContainer,
     required this.info,
@@ -44,7 +44,7 @@ class AppFeedbackColor extends ThemeExtension<AppFeedbackColor> {
   //
 
   @override
-  AppFeedbackColor copyWith({
+  AppFeedbackTypeColor copyWith({
     Color? success,
     Color? successContainer,
     Color? onSuccessContainer,
@@ -55,7 +55,7 @@ class AppFeedbackColor extends ThemeExtension<AppFeedbackColor> {
     Color? warningContainer,
     Color? onWarningContainer,
   }) {
-    return AppFeedbackColor(
+    return AppFeedbackTypeColor(
       success: success ?? this.success,
       successContainer: successContainer ?? this.successContainer,
       info: info ?? this.info,
@@ -66,10 +66,10 @@ class AppFeedbackColor extends ThemeExtension<AppFeedbackColor> {
   }
 
   @override
-  AppFeedbackColor lerp(covariant AppFeedbackColor? other, double t) {
+  AppFeedbackTypeColor lerp(covariant AppFeedbackTypeColor? other, double t) {
     if (other == null) return this;
 
-    return AppFeedbackColor(
+    return AppFeedbackTypeColor(
       success: Color.lerp(success, other.success, t)!,
       successContainer: Color.lerp(
         successContainer,

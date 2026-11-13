@@ -1,6 +1,6 @@
-import 'package:trading_management/core/constants/app_message.dart';
 import 'package:trading_management/core/form/app_form_field.dart';
 import 'package:trading_management/core/form/validation/validation_result.dart';
+import 'package:trading_management/core/presentation/error/app_message.dart';
 
 /// アプリケーション共通のバリデーション
 class AppValidator {

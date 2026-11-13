@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:trading_management/core/preview/app_preview.dart';
 import 'package:trading_management/features/trade/domain/models/trade_stage.dart';
-import 'package:trading_management/features/trade/presentation/widgets/common/info/stage_indicator/trade_stage_indicator.dart';
+import 'package:trading_management/features/trade/presentation/widgets/common/stage_indicator/trade_stage_indicator.dart';
 
 const _group = 'trade/common/info/stage_indicator';
 

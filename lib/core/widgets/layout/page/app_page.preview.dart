@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:trading_management/core/preview/app_preview.dart';
+import 'package:trading_management/core/types/app_display_message.dart';
+import 'package:trading_management/core/types/message_type/app_feedback_type.dart';
 import 'package:trading_management/core/widgets/layout/bottom_navigation_bar/app_bottom_navigation_bar.dart';
 import 'package:trading_management/core/widgets/layout/page/app_page.dart';
 import 'package:trading_management/core/widgets/navigation/app_bars/common/common_app_bar.dart';
@@ -34,7 +36,10 @@ Widget appPageLoadingPreview() {
 Widget appPageMessagePreview() {
   return const AppPage(
     appBar: CommonAppBar(title: 'ページタイトル'),
-    message: 'データを読み込みました。',
+    message: AppDisplayMessage(
+      type: AppFeedbackType.info,
+      message: 'データを読み込みました。',
+    ),
     body: SizedBox(),
   );
 }

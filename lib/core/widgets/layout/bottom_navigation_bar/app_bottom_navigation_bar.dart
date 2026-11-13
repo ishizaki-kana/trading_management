@@ -23,6 +23,13 @@ class _AppBottomNavigationBarState extends State<AppBottomNavigationBar> {
   // fields
   //
 
+  List<({Widget icon, String label})> items = [
+    (icon: Icon(Icons.swap_horiz), label: '取引'),
+    (icon: Icon(Icons.add), label: '登録'),
+    (icon: Icon(Icons.list), label: '在庫'),
+    (icon: Icon(Icons.settings), label: '設定'),
+  ];
+
   /// 選択中のインデックス
   int _selectedIndex = 0;
 
@@ -33,13 +40,11 @@ class _AppBottomNavigationBarState extends State<AppBottomNavigationBar> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final actions = [
-      const NavigationDestination(icon: Icon(Icons.home), label: 'ホーム'),
-      const NavigationDestination(icon: Icon(Icons.swap_horiz), label: '取引'),
-      const NavigationDestination(icon: Icon(Icons.add), label: '登録'),
-      const NavigationDestination(icon: Icon(Icons.list), label: '在庫'),
-      const NavigationDestination(icon: Icon(Icons.settings), label: '設定'),
-    ];
+    final actions = items
+        .map(
+          (item) => NavigationDestination(icon: item.icon, label: item.label),
+        )
+        .toList();
 
     return DecoratedBox(
       decoration: BoxDecoration(
@@ -53,6 +58,7 @@ class _AppBottomNavigationBarState extends State<AppBottomNavigationBar> {
         elevation: 8,
         height: 64,
         selectedIndex: _selectedIndex,
+        labelTextStyle: WidgetStatePropertyAll(theme.textTheme.labelSmall),
         destinations: actions,
         onDestinationSelected: navigation,
       ),

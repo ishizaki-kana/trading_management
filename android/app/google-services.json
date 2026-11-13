@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "847323431526",
+    "project_id": "trading-management-13b17",
+    "storage_bucket": "trading-management-13b17.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:847323431526:android:8b0f91be3abac65f7ca3a7",
+        "android_client_info": {
+          "package_name": "com.example.trading_management"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAPZ1geJJRHwVHgAF6tuXTkzt1IoVP6S08"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -40,4 +40,9 @@ class TradeStageHistoryRepository
 
     return query.get();
   }
+
+  @override
+  Future<void> insert(TradeStageHistory entity) {
+    return database.into(database.tradeStageHistories).insert(entity);
+  }
 }

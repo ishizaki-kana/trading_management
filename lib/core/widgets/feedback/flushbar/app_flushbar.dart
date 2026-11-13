@@ -1,9 +1,10 @@
 import 'package:another_flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:trading_management/core/theme/app_duration.dart';
 import 'package:trading_management/core/theme/app_radius.dart';
 import 'package:trading_management/core/theme/app_spacing.dart';
-import 'package:trading_management/core/types/app_feedback.dart';
+import 'package:trading_management/core/types/message_type/app_feedback_type.dart';
 
 /// フラッシュバー
 ///
@@ -22,9 +23,11 @@ class AppFlushbar {
   /// - [message] メッセージ
   static Future<void> show(
     BuildContext context, {
-    required AppFeedback type,
+    required AppFeedbackType type,
     required String message,
   }) {
+    final overlayContext = Navigator.of(context, rootNavigator: true).context;
+
     return Flushbar(
       message: message,
       flushbarStyle: FlushbarStyle.FLOATING,
@@ -35,9 +38,9 @@ class AppFlushbar {
       ),
       borderRadius: AppRadius.md,
       duration: AppDuration.notification,
-      icon: Icon(type.icon, color: type.textColor(context)),
+      icon: FaIcon(type.icon, color: type.textColor(context)),
       backgroundColor: type.containerColor(context),
       messageColor: type.textColor(context),
-    ).show(context);
+    ).show(overlayContext);
   }
 }

@@ -57,6 +57,9 @@ dependencies:
 
   # フラッシュバー
   another_flushbar: ^2.2.4
+  firebase_core: ^5.1.0
+  firebase_crashlytics: ^6.0.1
+  sqlite3: ^3.5.2
 
 dev_dependencies:
   flutter_test:

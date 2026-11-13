@@ -1,13 +1,10 @@
-import 'package:trading_management/core/constants/app_message.dart';
+import 'package:trading_management/core/presentation/error/app_message.dart';
 
 /// データなし例外
 class NotFoundException implements Exception {
   //
   // fields
   //
-
-  /// 例外対象名
-  final String targetName;
 
   /// 例外対象
   final Object target;
@@ -16,16 +13,22 @@ class NotFoundException implements Exception {
   // constructor
   //
 
-  const NotFoundException(this.targetName, this.target);
+  const NotFoundException(this.target);
 
   //
   // getter
   //
 
-  /// メッセージ取得
+  /// 画面メッセージ
   ///
   /// 対象のデータが見つかりません。
-  String get message => AppMessage.dataNotFound;
+  String get userMessage => AppMessage.dataNotFound;
+
+  /// ログメッセージ
+  ///
+  /// [NotFoundException] 対象のデータが見つかりません。(target = {target})
+  String get logMessage =>
+      '[NotFoundException] $userMessage (target = $target)';
 
   //
   // public methods
@@ -33,6 +36,6 @@ class NotFoundException implements Exception {
 
   @override
   String toString() {
-    return '$message ($targetName: $target)';
+    return logMessage;
   }
 }

@@ -5,7 +5,7 @@ class ValidationException<T> implements Exception {
   //
 
   /// メッセージ
-  final String? message;
+  final String message;
 
   //
   // constructor

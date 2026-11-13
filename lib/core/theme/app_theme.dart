@@ -49,7 +49,7 @@ abstract final class AppTheme {
   );
 
   /// 状態種別
-  static AppFeedbackColor _createFeedbackColors(Brightness brightness) {
+  static AppFeedbackTypeColor _createFeedbackColors(Brightness brightness) {
     final successScheme = ColorScheme.fromSeed(
       seedColor: AppColor.success,
       brightness: brightness,
@@ -63,7 +63,7 @@ abstract final class AppTheme {
       brightness: brightness,
     );
 
-    return AppFeedbackColor(
+    return AppFeedbackTypeColor(
       success: successScheme.primary,
       successContainer: successScheme.primaryContainer,
       info: infoScheme.primary,
@@ -216,9 +216,20 @@ abstract final class AppTheme {
   // icon
   //
 
-  /// アイコン
   static IconThemeData _iconTheme() {
     return IconThemeData(color: AppColor.grey);
+  }
+
+  //
+  // menu
+  //
+
+  static MenuThemeData _menuTheme(ColorScheme colorScheme) {
+    return MenuThemeData(
+      style: MenuStyle(
+        backgroundColor: WidgetStatePropertyAll(colorScheme.surfaceContainer),
+      ),
+    );
   }
 
   //
@@ -249,6 +260,7 @@ abstract final class AppTheme {
       extensions: [
         _createFeedbackColors(colorScheme.brightness), // 成功・情報・警告で使うテーマ色
       ],
+      menuTheme: _menuTheme(colorScheme),
     );
   }
 }

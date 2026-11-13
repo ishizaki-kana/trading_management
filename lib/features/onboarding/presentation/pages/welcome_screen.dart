@@ -8,13 +8,15 @@ class WelcomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: AppButton(
-        text: 'start',
-        onPressed: () {
-          Navigator.of(
-            context,
-          ).push(MaterialPageRoute(builder: (context) => TradeListScreen()));
-        },
+      body: Center(
+        child: AppButton(
+          text: 'start',
+          onPressed: () {
+            Navigator.of(
+              context,
+            ).push(MaterialPageRoute(builder: (context) => TradeListScreen()));
+          },
+        ),
       ),
     );
   }

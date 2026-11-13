@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:trading_management/core/preview/app_preview.dart';
-import 'package:trading_management/core/types/app_feedback.dart';
+import 'package:trading_management/core/types/message_type/app_feedback_type.dart';
 import 'package:trading_management/core/widgets/feedback/banner/status_banner.dart';
 
 const _group = 'feedback/banner/status';
@@ -8,28 +8,31 @@ const _group = 'feedback/banner/status';
 @AppPreview(group: _group, name: 'Success', size: Size(360, 160))
 Widget statusBannerSuccessPreview() {
   return _buildPreview(
-    const StatusBanner(type: AppFeedback.success, message: '取引を登録しました。'),
+    const StatusBanner(type: AppFeedbackType.success, message: '取引を登録しました。'),
   );
 }
 
 @AppPreview(group: _group, name: 'Info', size: Size(360, 160))
 Widget statusBannerInfoPreview() {
   return _buildPreview(
-    const StatusBanner(type: AppFeedback.info, message: '入力内容を保存できます。'),
+    const StatusBanner(type: AppFeedbackType.info, message: '入力内容を保存できます。'),
   );
 }
 
 @AppPreview(group: _group, name: 'Warning', size: Size(360, 160))
 Widget statusBannerWarningPreview() {
   return _buildPreview(
-    const StatusBanner(type: AppFeedback.warning, message: '入力内容を確認してください。'),
+    const StatusBanner(
+      type: AppFeedbackType.warning,
+      message: '入力内容を確認してください。',
+    ),
   );
 }
 
 @AppPreview(group: _group, name: 'Error', size: Size(360, 160))
 Widget statusBannerErrorPreview() {
   return _buildPreview(
-    const StatusBanner(type: AppFeedback.error, message: '取引の登録に失敗しました。'),
+    const StatusBanner(type: AppFeedbackType.error, message: '取引の登録に失敗しました。'),
   );
 }
 

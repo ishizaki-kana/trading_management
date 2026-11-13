@@ -26,8 +26,6 @@ class BottomActionBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-
     return SafeArea(
       top: false,
       child: Container(
@@ -35,14 +33,13 @@ class BottomActionBar extends StatelessWidget {
           horizontal: AppSpacing.s16,
           vertical: AppSpacing.s8,
         ),
-        decoration: BoxDecoration(color: theme.colorScheme.surfaceContainerLow),
         child: SizedBox(
           width: double.infinity,
           child: AppButton(
             onPressed: config.onPressed,
             text: config.text ?? '',
             isLoading: config.isLoading ?? false,
-            padding: const EdgeInsets.symmetric(vertical: AppSpacing.s16),
+            padding: const EdgeInsets.symmetric(vertical: AppSpacing.s12),
           ),
         ),
       ),

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:trading_management/core/preview/app_preview.dart';
 import 'package:trading_management/features/trade/domain/models/delivery_type.dart';
 import 'package:trading_management/features/trade/domain/models/trade_type.dart';
-import 'package:trading_management/features/trade/presentation/widgets/common/info/trade_chip/trade_chip.dart';
+import 'package:trading_management/features/trade/presentation/widgets/common/trade_chip/trade_chip.dart';
 
 const _group = 'trade/common/info/trade_chip';
 

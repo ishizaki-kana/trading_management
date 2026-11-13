@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:trading_management/core/preview/app_preview.dart';
 import 'package:trading_management/features/trade/application/models/trade_item.dart';
 import 'package:trading_management/features/trade/domain/models/trade_type.dart';
-import 'package:trading_management/features/trade/presentation/widgets/common/info/trade_target/trade_target.dart';
+import 'package:trading_management/features/trade/presentation/widgets/common/trade_target/trade_target.dart';
 
 const _group = 'trade/common/info/trade_target';
 

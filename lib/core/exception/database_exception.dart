@@ -1,15 +1,39 @@
-/// DB実行時例外
+/// DB例外
 class DatabaseException implements Exception {
   //
   // fields
   //
 
   /// エラー
-  final Object cause;
+  final Exception cause;
+
+  /// メッセージ
+  final String message;
 
   //
   // constructor
   //
 
-  const DatabaseException(this.cause);
+  const DatabaseException(this.cause, this.message);
+
+  //
+  // getter
+  //
+
+  /// 画面メッセージ
+  String get userMessage => message;
+
+  /// ログメッセージ
+  ///
+  /// [DatabaseException] {エラーメッセージ}
+  String get logMessage => '[DatabaseException] $message';
+
+  //
+  // public methods
+  //
+
+  @override
+  String toString() {
+    return logMessage;
+  }
 }

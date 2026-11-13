@@ -25,7 +25,7 @@ class AppColor {
 
   // セクションや入力エリアなど、面の中の区切り
   static const Color lightSurfaceContainer = Color(0xFFFFFFFF);
-  static const Color darkSurfaceContainer = Color(0xffe3f6f5);
+  static const Color darkSurfaceContainer = Color(0xFF2A2A2A);
 
   // 通常画面の主要な文字・アイコン
   static const Color lightOnSurface = Color(0xFF444444);

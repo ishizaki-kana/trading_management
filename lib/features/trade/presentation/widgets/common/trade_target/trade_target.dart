@@ -46,14 +46,17 @@ class TradeTarget extends StatelessWidget {
     final theme = Theme.of(context);
 
     return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         Expanded(child: _buildTradeItem(offerItem, true, context)),
         SizedBox(
           width: AppSpacing.s32,
-          child: Icon(
-            Icons.compare_arrows_outlined,
-            color: theme.colorScheme.onSurfaceVariant,
+          child: Padding(
+            padding: const EdgeInsets.only(bottom: AppSpacing.s48),
+            child: Icon(
+              Icons.compare_arrows_outlined,
+              color: theme.colorScheme.onSurfaceVariant,
+            ),
           ),
         ),
         Expanded(child: _buildTradeItem(wantedItem, false, context)),

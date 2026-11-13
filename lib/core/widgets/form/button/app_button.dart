@@ -20,6 +20,9 @@ class AppButton extends StatelessWidget {
   /// パディング
   final EdgeInsetsGeometry? padding;
 
+  /// 背景色
+  final Color? backgroundColor;
+
   /// ローディング中か
   final bool isLoading;
 
@@ -37,6 +40,7 @@ class AppButton extends StatelessWidget {
     super.key,
     required this.text,
     this.padding,
+    this.backgroundColor,
     this.isLoading = false,
     this.isFullWidth = false,
     this.onPressed,
@@ -51,8 +55,11 @@ class AppButton extends StatelessWidget {
     return SizedBox(
       width: isFullWidth ? double.infinity : null,
       child: ElevatedButton(
+        style: ElevatedButton.styleFrom(
+          padding: padding,
+          backgroundColor: backgroundColor,
+        ),
         onPressed: isLoading ? null : onPressed,
-        style: ElevatedButton.styleFrom(padding: padding),
         child: isLoading
             ? const SizedBox(
                 width: AppIconSize.sm,

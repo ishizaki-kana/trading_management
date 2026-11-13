@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:trading_management/core/constants/app_message.dart';
 import 'package:trading_management/core/data/database/app_database.scope.dart';
 import 'package:trading_management/core/theme/app_spacing.dart';
 import 'package:trading_management/core/widgets/layout/bottom_navigation_bar/app_bottom_navigation_bar.dart';
@@ -26,7 +25,7 @@ class TradeListScreen extends StatefulWidget {
   State<TradeListScreen> createState() => _TradeListScreenState();
 }
 
-class _TradeListScreenState extends State<TradeListScreen> {
+class _TradeListScreenState extends AppPageState<TradeListScreen> {
   //
   // fields
   //
@@ -37,17 +36,14 @@ class _TradeListScreenState extends State<TradeListScreen> {
   /// 検索条件
   TradeSearchConditions _conditions = const TradeSearchConditions();
 
-  /// 最新のリクエストID
-  int _currentRequestId = 0;
+  /// 一覧のスクロール位置
+  final _scrollController = ScrollController();
 
-  /// メッセージ
-  ({String message, IconData icon})? _message;
-
-  /// 読み込み処理を開始済みかどうか
-  bool _isLoadStarted = false;
-
-  ///　読み込み中かどうか
-  bool _isLoading = false;
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
 
   //
   // public methods
@@ -58,36 +54,19 @@ class _TradeListScreenState extends State<TradeListScreen> {
   void didChangeDependencies() {
     super.didChangeDependencies();
 
-    // 初回のみ読み込み処理を開始する
-    if (_isLoadStarted) {
-      return;
-    }
-    _isLoadStarted = true;
-    _loadTrades(_conditions);
+    // 初回のみ読み込み処理を開始
+    tryStartLoading(action: () => _loadTrades(_conditions));
   }
 
   @override
   Widget build(BuildContext context) {
     return AppPage(
-      isLoading: _isLoading,
-      message: _message?.message,
-      messageIcon: _message?.icon,
+      message: message,
+      isLoading: isLoading,
       appBar: TradeSearchAppBar(onChanged: _searchTrades),
-      body: ListView.separated(
-        padding: EdgeInsets.symmetric(
-          horizontal: AppSpacing.pageHorizontal(context),
-          vertical: AppSpacing.pageVertical(context),
-        ),
-        itemCount: _trades.length,
-        itemBuilder: (context, index) {
-          return TradeCard(
-            trade: _trades[index],
-            onReturned: () => _loadTrades(_conditions),
-          );
-        },
-        separatorBuilder: (_, _) => const SizedBox(height: AppSpacing.s20),
-      ),
+      body: _buildBody(),
       bottomNavigationBar: const AppBottomNavigationBar(),
+      onRetry: () => _searchTrades(_conditions),
     );
   }
 
@@ -99,42 +78,18 @@ class _TradeListScreenState extends State<TradeListScreen> {
   ///
   /// - [conditions] 検索条件
   Future<void> _loadTrades(TradeSearchConditions conditions) async {
-    final requestId = ++_currentRequestId;
-
-    // ローディング状態・画面メッセージ初期化
-    setState(() {
-      _conditions = conditions;
-      _isLoading = true;
-      _message = null;
-    });
+    // 検索条件更新
+    _conditions = conditions;
 
     final database = AppDatabaseScope.of(context);
     final tradeService = TradeService.fromDatabase(database);
 
-    try {
-      final trades = await tradeService.getByConditions(conditions);
-
-      if (!mounted || requestId != _currentRequestId) {
-        return;
-      }
-
-      setState(() {
+    return runPageAction(
+      action: () => tradeService.getByConditions(conditions),
+      onSuccess: (trades) {
         _trades = trades;
-        _message = trades.isEmpty
-            ? (message: AppMessage.dataNotFound, icon: Icons.inbox_outlined)
-            : null;
-        _isLoading = false;
-      });
-    } catch (error) {
-      if (!mounted || requestId != _currentRequestId) {
-        return;
-      }
-
-      setState(() {
-        _message = (message: error.toString(), icon: Icons.error_outline);
-        _isLoading = false;
-      });
-    }
+      },
+    );
   }
 
   /// 検索条件更新
@@ -142,5 +97,41 @@ class _TradeListScreenState extends State<TradeListScreen> {
   /// - [conditions] 検索条件
   void _searchTrades(TradeSearchConditions conditions) {
     _loadTrades(conditions);
+  }
+
+  /// ステージ更新後の一覧再読み込み
+  ///
+  /// ローディング画面へ置き換えずに再読み込みすることで、一覧のスクロール位置を維持します。
+  Future<void> _refreshTrades() async {
+    final database = AppDatabaseScope.of(context);
+    final tradeService = TradeService.fromDatabase(database);
+    final trades = await tradeService.getByConditions(_conditions);
+
+    if (!mounted) return;
+
+    setState(() {
+      _trades = trades;
+    });
+  }
+
+  // ボディ作成
+  Widget _buildBody() {
+    return ListView.separated(
+      key: const PageStorageKey('trade-list'),
+      controller: _scrollController,
+      padding: EdgeInsets.symmetric(
+        horizontal: AppSpacing.pageHorizontal(context),
+        vertical: AppSpacing.pageVertical(context),
+      ),
+      itemCount: _trades.length,
+      itemBuilder: (context, index) {
+        return TradeCard(
+          trade: _trades[index],
+          onReturned: () => _loadTrades(_conditions),
+          onUpdated: _refreshTrades,
+        );
+      },
+      separatorBuilder: (_, _) => const SizedBox(height: AppSpacing.s20),
+    );
   }
 }

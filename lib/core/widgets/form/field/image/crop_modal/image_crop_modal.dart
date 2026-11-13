@@ -3,7 +3,7 @@ import 'dart:math' as math;
 import 'package:crop_your_image/crop_your_image.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:trading_management/core/constants/app_message.dart';
+import 'package:trading_management/core/presentation/error/app_message.dart';
 import 'package:trading_management/core/widgets/form/button/app_button_config.dart';
 import 'package:trading_management/core/widgets/layout/modal/full_height/full_height_modal.dart';
 

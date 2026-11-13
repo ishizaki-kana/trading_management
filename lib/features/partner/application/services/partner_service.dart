@@ -1,6 +1,7 @@
 import 'package:trading_management/core/application/services/base_service.dart';
 import 'package:trading_management/core/data/database/app_database.dart';
 import 'package:trading_management/core/exception/not_found_exception.dart';
+import 'package:trading_management/core/types/app_operation_type.dart';
 import 'package:trading_management/core/utils/id_generator.dart';
 import 'package:trading_management/features/partner/application/forms/partner_form.dart';
 import 'package:trading_management/features/partner/application/forms/partner_validator.dart';
@@ -18,6 +19,9 @@ class PartnerService extends BaseService {
 
   /// 取引相手リポジトリ
   final PartnerRepository _repository;
+
+  @override
+  String get tableName => 'partners';
 
   //
   // constructor
@@ -47,13 +51,6 @@ class PartnerService extends BaseService {
       super(repository.database);
 
   //
-  // getter
-  //
-
-  @override
-  String get idName => '取引相手ID';
-
-  //
   // public method
   //
 
@@ -64,14 +61,23 @@ class PartnerService extends BaseService {
   /// - [partnerId] 取引相手ID
   ///
   /// 例外:
+  /// - [NotFoundException] 指定したIDのデータが存在しないとき
   /// - [DatabaseException] DB実行時にエラーが発生したとき
   Future<PartnerDetail?> getById(String partnerId) {
-    return execute(() async {
-      final partner = await _repository.getById(partnerId);
+    return execute(
+      () async {
+        if (partnerId.isEmpty) return null;
 
-      if (partner == null) return null;
-      return PartnerMapper.toPartnerDetail(partner);
-    });
+        final partner = await _repository.getById(partnerId);
+        if (partner == null) {
+          throw NotFoundException(partnerId);
+        }
+
+        return PartnerMapper.toPartnerDetail(partner);
+      },
+      operation: AppOperationType.getById,
+      target: partnerId,
+    );
   }
 
   /// 取引相手概要リスト取得
@@ -83,15 +89,19 @@ class PartnerService extends BaseService {
   /// 例外:
   /// - [DatabaseException] DB実行時にエラーが発生したとき
   Future<Map<String, PartnerSummary>> getByIds(List<String> partnerIds) {
-    return execute(() async {
-      final conditions = PartnerSearchConditions(partnerIds: partnerIds);
-      final partners = await _repository.getByConditions(conditions);
+    return execute(
+      () async {
+        final conditions = PartnerSearchConditions(partnerIds: partnerIds);
+        final partners = await _repository.getByConditions(conditions);
 
-      return {
-        for (final partner in partners)
-          partner.partnerId: PartnerMapper.toPartnerSummary(partner),
-      };
-    });
+        return {
+          for (final partner in partners)
+            partner.partnerId: PartnerMapper.toPartnerSummary(partner),
+        };
+      },
+      operation: AppOperationType.getByIds,
+      target: partnerIds,
+    );
   }
 
   /// 取引相手データ新規登録・更新
@@ -104,21 +114,19 @@ class PartnerService extends BaseService {
   ///
   /// 例外:
   /// - [DatabaseException] DB実行時にエラーが発生したとき
-  Future<void> upsert(String? partnerId, PartnerForm form) {
-    return execute(() async {
-      // バリデーション
-      PartnerValidator.validate(form);
+  Future<void> upsert(String? partnerId, PartnerForm form) async {
+    // バリデーション
+    PartnerValidator.validate(form);
 
-      // データ存在チェック
-      Partner? existing;
-      if (partnerId != null) existing = await _repository.getById(partnerId);
+    // データ存在チェック
+    Partner? existing;
+    if (partnerId != null) existing = await _repository.getById(partnerId);
 
-      if (existing == null) {
-        await _insert(form); // 新規作成
-      } else {
-        await _update(existing, form); // 更新
-      }
-    });
+    if (existing == null) {
+      await _insert(form); // 新規作成
+    } else {
+      await _update(existing, form); // 更新
+    }
   }
 
   /// 取引相手削除
@@ -129,13 +137,17 @@ class PartnerService extends BaseService {
   /// - [NotFoundException] データが存在しないとき
   /// - [DatabaseException] DB実行時にエラーが発生したとき
   Future<void> delete(String partnerId) {
-    return execute(() async {
-      final result = await _repository.delete(partnerId);
+    return execute(
+      () async {
+        final result = await _repository.delete(partnerId);
 
-      if (!result) {
-        throw NotFoundException(idName, partnerId);
-      }
-    });
+        if (!result) {
+          throw NotFoundException(partnerId);
+        }
+      },
+      operation: AppOperationType.delete,
+      target: partnerId,
+    );
   }
 
   //
@@ -149,11 +161,15 @@ class PartnerService extends BaseService {
   /// 例外:
   /// - [DatabaseException] DB実行時にエラーが発生したとき
   Future<void> _insert(PartnerForm form) {
-    return execute(() async {
-      final partnerId = IdGenerator.newId();
-      final entity = PartnerMapper.toNewPartner(partnerId, form);
-      await _repository.insert(entity);
-    });
+    return execute(
+      () async {
+        final partnerId = IdGenerator.newId();
+        final entity = PartnerMapper.toNewPartner(partnerId, form);
+        await _repository.insert(entity);
+      },
+      operation: AppOperationType.insert,
+      target: 'null',
+    );
   }
 
   /// 取引相手更新
@@ -165,13 +181,17 @@ class PartnerService extends BaseService {
   /// - [NotFoundException] データが存在しないとき
   /// - [DatabaseException] DB実行時にエラーが発生したとき
   Future<void> _update(Partner existing, PartnerForm form) {
-    return execute(() async {
-      final entity = PartnerMapper.toUpdatedPartner(existing, form);
-      final result = await _repository.update(entity);
+    return execute(
+      () async {
+        final entity = PartnerMapper.toUpdatedPartner(existing, form);
+        final result = await _repository.update(entity);
 
-      if (!result) {
-        throw NotFoundException(idName, existing.partnerId);
-      }
-    });
+        if (!result) {
+          throw NotFoundException(existing.partnerId);
+        }
+      },
+      operation: AppOperationType.update,
+      target: existing.partnerId,
+    );
   }
 }

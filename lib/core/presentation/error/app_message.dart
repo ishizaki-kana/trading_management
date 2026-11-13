@@ -4,8 +4,9 @@
 class AppMessage {
   AppMessage._(); // インスタンス化禁止
 
-  /// 対象のデータが見つかりません。
-  static const dataNotFound = '対象のデータが見つかりません。';
+  //
+  // 画面操作エラー
+  //
 
   /// リンクを開けませんでした。
   static const linkOpenFailed = 'リンクを開けませんでした。';
@@ -37,4 +38,26 @@ class AppMessage {
 
   /// 切り抜きに失敗しました。
   static String imageCropFailed = '切り抜きに失敗しました。';
+
+  /// 予期せぬエラーが発生しました。
+  static const String unknownError = '予期せぬエラーが発生しました。';
+
+  //
+  // DBエラー
+  //
+
+  /// 対象のデータが見つかりません。
+  static const dataNotFound = '対象のデータが見つかりません。';
+
+  /// データの読み込みに失敗しました。時間をおいて再度お試しください。
+  static const dataLoadFailed = 'データの読み込みに失敗しました。時間をおいて再度お試しください。';
+
+  /// データの登録に失敗しました。もう一度お試しください。
+  static const dataInsertFailed = 'データの登録に失敗しました。もう一度お試しください。';
+
+  /// データの更新に失敗しました。もう一度お試しください。
+  static const dataUpdateFailed = 'データの更新に失敗しました。もう一度お試しください。';
+
+  /// データの削除に失敗しました。もう一度お試しください。
+  static const dataDeleteFailed = 'データの削除に失敗しました。もう一度お試しください。';
 }

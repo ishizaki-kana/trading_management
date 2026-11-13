@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart' hide Feedback;
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:trading_management/core/theme/app_radius.dart';
 import 'package:trading_management/core/theme/app_spacing.dart';
-import 'package:trading_management/core/types/app_feedback.dart';
+import 'package:trading_management/core/types/message_type/app_feedback_type.dart';
 
 /// バナー
 ///
@@ -13,7 +14,7 @@ class StatusBanner extends StatelessWidget {
   //
 
   /// タイプ
-  final AppFeedback type;
+  final AppFeedbackType type;
 
   /// メッセージ
   final String message;
@@ -42,7 +43,7 @@ class StatusBanner extends StatelessWidget {
       child: Row(
         spacing: AppSpacing.s8,
         children: [
-          Icon(type.icon, color: type.textColor(context)),
+          FaIcon(type.icon, color: type.textColor(context)),
           Expanded(
             child: Text(
               message,
